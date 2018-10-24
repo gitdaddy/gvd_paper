@@ -1,0 +1,187 @@
+%-------------------------------------------------------------------------------
+% Distance error bound
+%-------------------------------------------------------------------------------
+\section{Distance error bound}
+This section sketches the proof of the octree vertex distance error bound.  The bound is $\frac{\e(v)}{\d(v)} \le \frac{1}{2}$, where $\e(v)$ is the error at a vertex $v$ and $\d(v)$ is the distance from $v$ to the nearest point on $S$.
+
+See figure \ref{fig:bound-proof}.  $\alpha(v)$ is the shortest distance between $v$ and any of $v$'s neighbors in the cardinal directions. Let $p(v) = \argmin_{p \in S} \dist(p,v)$ be the point on $S$ that is closest to $v$ and $\d(v) = \dist(p(v),v)$. With $V(v)$ as the set of all vertices visible to $v$, let $\overline{p}(v) = \argmin_{a \in V(v)} \dist(\overline{p}(a),v)$ be the octree approximation of $p(v)$ and $\overline{\d}(v) = \dist(\overline{p}(v), v)$ the octree approximation $\d(v)$. Because $\overline{p}(v)$ is a point on the surface then we know that $\overline{\d}(v) \ge \d(v)$. Define $\epsilon(v) = \overline{\d}(v)-\d(v)$.  $\ball(a,r)$ is a ball centered at $a$ with radius $r$. $\hat{\delta}(b)$ is the radius of the ball centered at $b$ that is guaranteed not to contain $\overline{p}(b)$ by virtue of $\ball(v, \overline{\delta}(v))$.  Finally, $k=\frac{\alpha(v)}{\alpha(a)}$.
+
+Our proof builds geometric constructs (specifically, unions of circles) of regions $\Omega$ for which $\Omega \cap S = \emptyset$.  We find, for a given $\Omega$, the closest point $q(v) \in \Omega^C$ to $v$, that is, $q(v) = \argmin_{p \in \Omega^C} \dist(p, v)$ where $\Omega^C$ is the complementary space of $\Omega$.
+
+\paragraph{Approach}: We bound the error by showing that, in every case, $\mu(v) = \dist(q(v),v) \le (1/2)\alpha(v)$.  Some proofs of lemmas are omitted for brevity.
+
+\begin{figure}
+  \centering
+  \subfloat[][]{
+    \label{fig:bound-proof-1}
+    \includegraphics[width=0.3\columnwidth]{bound-proof-1.pdf} }
+  \subfloat[][]{
+    \label{fig:bound-proof-2}
+    \includegraphics[width=0.3\columnwidth]{bound-proof-2.pdf} }
+  \subfloat[][]{
+    \label{fig:bound-proof-3}
+    \includegraphics[width=0.3\columnwidth]{bound-proof-3.pdf} }
+  \caption{Bounds proof.
+    \protect\subref{fig:bound-proof-1} Lemma 1 case.
+    \protect\subref{fig:bound-proof-2} Lemma 2 case.
+    \protect\subref{fig:bound-proof-3} Lemma 3.
+  }
+  \label{fig:bound-proof}
+\end{figure}
+
+The first case is as shown in figure \ref{fig:bound-proof-1}, and whether the case holds is governed by the following lemma:
+
+%----------------------------------------
+% Meeting circles lemma 1 and corollaries
+%----------------------------------------
+\begin{lemma}[Meeting circles lemma a]
+For $\bar{p}(v) = p(a)$, 
+\[
+\d(a) \le \frac{1}{2}(1-k+\sqrt{k^2+1})\alpha(a) \Leftrightarrow \ball(a,\d(a)) \cap \ball(b,\hat{\d}(b)) = \emptyset
+\]
+\end{lemma}
+\begin{proof}
+\red{third line, fifth line}
+\begin{alignat}{5}
+\d(a) &\le \alpha(a)-\hat{\d}(b) \nonumber \\
+        &= \alpha(a) - (\bar{\d}(v)-\sqrt{\alpha^2(v)+\alpha^2(a)}) \nonumber \\
+        &\le \alpha(a) - (\d(a)+\alpha(v)-\sqrt{\alpha^2(v)+\alpha^2(a)}) & \hspace{5mm}(\mathtext{equal for } \bar{p}(v) \mathtext{ on vertical}) \nonumber \\
+        &= \alpha(a)-\alpha(v)+\sqrt{\alpha^2(v)+\alpha^2(a)}-\d(a) \nonumber \\
+        &= \frac{1}{2}(\alpha(a)-\alpha(v)+\sqrt{\alpha^2(v)+\alpha^2(a)}) \nonumber \\
+        &= \frac{1}{2}(1-k+\sqrt{k^2+1})\alpha(a) 
+\end{alignat}
+\end{proof}
+
+%-----------------------------------------------------------
+% The following figures are not currently used
+%-----------------------------------------------------------
+%\begin{figure}[]
+%  \center
+%  \subfloat[]{
+%    \label{fig:meeting-circles-0}
+%    \includegraphics[width=0.45\textwidth]{code/meeting-circles-0.pdf} }
+%  \subfloat[]{
+%    \label{fig:meeting-circles-1}
+%    \includegraphics[width=0.45\textwidth]{code/meeting-circles-1.pdf} }
+%  \caption{
+%    \subref{fig:meeting-circles-0} As $k$ increases, the size of $\d(a_0)$ at which the circles meet shrinks.
+%    \subref{fig:meeting-circles-1} As $k$ increases, the size of $\d(a_0)$ at which the circles meet shrinks.  This is for different values of $i$.
+%  }
+%  \label{fig:functions}
+%\end{figure}
+
+\begin{corollary}
+For $\bar{p}(v) = p(a)$, 
+\[
+\d(a) \ge \frac{\sqrt{2}}{2}\alpha(a) \Rightarrow \ball(a,\d(a) \cap \ball(b,\hat{\d}(b)) \ne \emptyset 
+\]
+\end{corollary}
+
+% Probably not useful
+%\begin{corollary}
+%For $\bar{p}(v) = p(a)$, 
+%\[
+%\d(a) \le \frac{1}{2}\alpha(a) \Rightarrow \ball(a,\d(a) \cap \ball(b,\hat{\d}(b)) = \emptyset 
+%\]
+%\end{corollary}
+
+The second case is as shown in figure \ref{fig:bound-proof-2}, and whether the case holds is governed by the following lemma:
+
+%----------------------------------------
+% Meeting circles lemma b and corollaries
+%----------------------------------------
+\begin{lemma}[Meeting circles lemma b]
+For $\bar{p}(v) = p(a)$ and $[b,c]$ are $[\alpha(v)/2, \alpha(v)]$, respectively, from $a$ in the positive $x$ direction,
+\[
+\d(a) \le \frac{\sqrt{5}+2\sqrt{2}-3}{4}\alpha(v) \Leftrightarrow \ball(b,\hat{\d}(b) \cap \ball(c,\hat{\d}(c)) = \emptyset
+\]
+\end{lemma}
+\begin{proof}
+\red{first line inequality?}
+\[ \hat{\d}(b) + \hat{\d}(c) = \frac{1}{2}\alpha(v) \]
+\red{Should be $\bar{\d}(v)$?}
+\[ \hat{\d}(b) = \d(v) - \sqrt{\alpha^2(v)+\frac{1}{4}\alpha^2(v)} = \d(v)-\frac{\sqrt{5}}{2}\alpha(v) \]
+\[ \hat{\d}(c) = \d(v) - \sqrt{\alpha^2(v)+\alpha^2(v)} = \d(v)-\sqrt{2}\alpha(v) \]
+\red{first line should be inequality?  Inequality is wrong direction.}
+\begin{alignat*}{5}
+\d(a) &= \d(v) - \alpha(v) \\
+      &= \frac{1}{2}(\hat{\d}(b) + \hat{\d}(c) + (\frac{\sqrt{5}}{2} + \sqrt{2} - 1)\alpha(v) \\
+      &= \frac{1}{2}(\frac{1}{2} + \frac{\sqrt{5}}{2} + \sqrt{2} - 1)\alpha(v) \\
+      &= \frac{\sqrt{5} + 2\sqrt{2} - 3}{4}\alpha(v)
+\end{alignat*}
+\end{proof}
+
+%----------------------------------------
+% Error lemma base case
+%----------------------------------------
+\begin{lemma}[Error lemma base case]
+\label{lem:error-base-case}
+For $\bar{p}(v) = p(a)$ and $\d(a) \le \frac{\sqrt{2}}{2}\alpha(a)$,
+\red{todo: define $\alpha_0$}
+\begin{equation}
+\label{eqn:e0}
+\e(v) = \e_0(v,k) \le \frac{1}{2}(2k+\sqrt{2}-\sqrt{4k^2+2})\alpha_0
+\end{equation}
+\end{lemma}
+\begin{proof}
+It follows from the algorithm that if $\d(a) \le \frac{\sqrt{2}}{2}\alpha(a)$ then $\alpha(a) = \alpha_0$.
+\red{first line should be inequality?  Rewrite starting $\e(v) = \bar{\d(v)} - \d(v)$}
+\begin{alignat*}{5}
+\e(v) &= \alpha(v) + \bar{\d}(a) - \sqrt{\alpha^2(v)+\d^2(a)} \\
+      &= \alpha(v) + \d(a) - \sqrt{\alpha^2(v)+\d^2(a)} 
+         & \hspace{5mm}(\e(a) = 0) \\
+      &\le \alpha(v) + \frac{\sqrt{2}}{2}\alpha_0 - \sqrt{\alpha^2(v)+\frac{1}{2}\alpha_0^2} \\
+      &= \frac{1}{2}(2k+\sqrt{2}-\sqrt{4k^2+2})\alpha_0
+\end{alignat*}
+\end{proof}
+
+Note that
+\begin{equation}
+\label{eqn:e0-ineq}
+\e_0(v,k\le2) < 0.18 < e_0(v,k>2)
+\end{equation}
+
+%----------------------------------------
+% Intersecting circles lemma
+%----------------------------------------
+\begin{lemma}[Intersecting circles lemma]
+\label{lem:intersecting-circles}
+%Let $a_i$ be the $i$th adjacent vertex from $a$ traveling in the positive $x$ direction.  Let $q_i$ be the intersection of $\ball(a_{i-1}, \hat{\delta}(a_{i-1}))$ and $\ball(a_i, \hat{\delta}(a_i))$ that maximizes $\dist(v, q_i)$.  Then
+See figure \ref{fig:bound-proof-3}.
+
+\[
+%\sqrt{\alpha^2(v) + (\dist(a_i,a)+\hat{\delta}(a_i))^2} < \dist(v, q_i)
+\mu(v) < M(v)
+\]
+\end{lemma}
+%\begin{proof}
+%\end{proof}
+
+%----------------------------------------
+% Theorem
+%----------------------------------------
+\begin{theorem}
+$\frac{\e(v)}{\d(v)} \le \frac{1}{2}$.
+\end{theorem}
+
+\begin{proof}
+We first show that $\e(v) \le C\alpha(v)$ by induction.
+\begin{itemize}
+\item[] \textbf{Case 1 (base)} By definition, if $v$ is non-empty, then $\e(v) = 0$.
+\item[] \textbf{Case 2} By lemma \ref{lem:error-base-case} and equation \eqref{eqn:e0-ineq}, if $v$ is empty and $\alpha(a) < \frac{1}{2}\alpha(v)$, then
+  \[ \e(v) = \e_0(v,k) < \frac{1}{2}\alpha(v) \]
+\item[] \textbf{Induction} $k > 2$.  By lemma \ref{lem:intersecting-circles}, the error is maximized at $\d(a) = \frac{\sqrt{5} + 2\sqrt{2} - 3}{4}\alpha(v)$.  Then
+\begin{alignat*}{5}
+  \e(v) &\le \alpha(v) + \d(a) + \e(a) - \sqrt{\alpha^2(v) + (\alpha(v)-\hat{\d}(c))^2} \\
+%        &\le \alpha(v) + \frac{\sqrt{5} + 2\sqrt{2} - 3}{4}\alpha(v) - \sqrt{\alpha^2(v)+\left(\alpha(v)-\frac{1+\sqrt{5}-2\sqrt{2}}{4}\alpha(v)\right)^2} + \e(a) \\
+%        &= \left(1 + \frac{\sqrt{5} + 2\sqrt{2} - 3}{4} - \sqrt{2-\frac{1+\sqrt{5}-2\sqrt{2}}{2}+\frac{(1+\sqrt{5}-2\sqrt{2})^2}{16}}\right)\alpha(v) + \e(a) \\
+        &\le 0.18 \alpha(v) + \e(a) \\
+%        &\le 0.18 \alpha(v) + 0.37\alpha(a) \\
+%        &\le 0.18 \alpha(v) + \frac{0.37}{2}\alpha(v) \\
+        &\le 0.37 \alpha(v)
+\end{alignat*}
+\end{itemize}
+If $\d(v) < \alpha(v)$ then the error is zero and the theorem is proved by the base case.  Otherwise, 
+\[ \e(v) \le C\alpha(v) \le C\d(v) \].
+\end{proof}
+

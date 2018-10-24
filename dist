@@ -1,0 +1,66 @@
+#! /bin/bash
+
+# This script creates a distribution of the source in a sub-directory
+# called "source".
+
+mkdir source
+mkdir source/figs
+mkdir source/figs/knife-above
+mkdir source/figs/compare
+
+cp paper.tex source
+cp paper.bib source
+cp *.cls source
+cp common.tex source
+cp *.sty source
+cp *.fd source
+cp *.bst source
+
+cp figs/gears-far1.png source/figs
+cp figs/gears-close1.png source/figs
+cp figs/gears-far4.png source/figs
+cp figs/gears-close4.png source/figs
+cp figs/vertex-structure1.pdf source/figs
+cp figs/vertex-structure2.pdf source/figs
+cp figs/visible-vertices.pdf source/figs
+cp figs/2d-6.png source/figs
+cp figs/2d-7.png source/figs
+cp figs/2d-3.png source/figs
+cp figs/wavefront-diagram2.pdf source/figs
+cp figs/wavefront-diagram3.pdf source/figs
+cp figs/wavefront-diagram4.pdf source/figs
+cp figs/wavefront2.png source/figs
+cp figs/wavefront5.png source/figs
+cp figs/wavefront6.png source/figs
+cp figs/ambiguous3.pdf source/figs
+cp figs/ambiguous4.pdf source/figs
+cp figs/ambiguous5.pdf source/figs
+cp figs/ambiguous1.pdf source/figs
+cp figs/ambiguous2.pdf source/figs
+cp figs/oct19.png source/figs
+cp figs/oct21.png source/figs
+cp figs/compute-q.pdf source/figs
+cp figs/bisector2.pdf source/figs
+cp figs/bisector3.pdf source/figs
+cp figs/compare/compare2.pdf source/figs/compare
+cp figs/bunny-4.png source/figs
+cp figs/bunny-5.png source/figs
+cp figs/bunny-6.png source/figs
+cp figs/path.pdf source/figs
+cp figs/mol-explode2c-1.png source/figs
+cp figs/mol-explode2c-2.png source/figs
+cp figs/mol-explode2c-4.png source/figs
+cp figs/mol-explode2-1.png source/figs
+cp figs/mol-explode2-2.png source/figs
+cp figs/mol-explode2-4.png source/figs
+cp figs/pipes3.png source/figs
+cp figs/pipes6.png source/figs
+cp figs/pipes11.png source/figs
+cp figs/pipes13.png source/figs
+cp figs/heart2-1.png source/figs
+cp figs/heart2-5.png source/figs
+cp figs/neuron-prox1-4.png source/figs
+cp figs/neuron-prox1-5.png source/figs
+
+cp figs/knife-above/slice-00000.png source/figs/knife-above
+cp figs/knife-above/slice-00110.png source/figs/knife-above
