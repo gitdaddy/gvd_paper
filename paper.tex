@@ -61,8 +61,8 @@
 % D.Fellner, v1.17, Sep 23, 2010
 
 
-\title[GVD of Closely-Spaced Objects]%
-      {\red{Approximating} the Generalized Voronoi Diagram of Closely Spaced Objects}
+\title[Exact GVD]%
+      {Exact Generalized Voronoi Diagram computation using a sweepline algorithm}
 
 % for anonymous conference submission please enter your SUBMISSION ID
 % instead of the author's name (and leave the affiliation blank) !!
@@ -77,18 +77,11 @@
 %         $^2$Institut f{\"u}r ComputerGraphik \& Wissensvisualisierung, TU Graz, Austria
 %       }
 
-\author[J. Edwards \& E. Daniel \& V. Pascucci \& C. Bajaj]
+\author[J. Edwards \& Daniel Marsden]
 %       {John Edwards\thanks{jedwards@sci.utah.edu}$^1$ and
        {John Edwards$^1$ and
-         Eric Daniel$^2$ and
-         Valerio Pascucci$^1$ and
-         Chandrajit Bajaj$^3$ \\
-%         $^1$Scientific Computing and Imaging Institute, University of Utah \\
-%         $^2$Google, Inc. \\
-%         \footnotesize{$^3$The University of Texas at Austin}
-         \parbox[t]{10cm}{\centering $^1$Scientific Computing and Imaging Institute, University of Utah \\
-         $^2$Google, Inc. \\
-         \footnotesize{$^3$The University of Texas at Austin}}
+         Daniel Marsden$^1$ \\
+         \parbox[t]{10cm}{\centering $^1$Utah State University}
        }
 %\author[paper1040]
 %       {paper1040}
@@ -162,16 +155,14 @@
 \maketitle
 
 \begin{abstract}
-We present an algorithm to compute \red{an approximation of} the generalized Voronoi diagram (GVD) on arbitrary collections of 2D or 3D geometric objects.  In particular, we focus on datasets with closely spaced objects; GVD approximation is expensive and sometimes intractable on these datasets using previous algorithms.  With our approach, the GVD can be computed using commodity hardware even on datasets with many, extremely tightly packed objects.  Our approach is to subdivide the space with an octree that is represented with an adjacency structure. We then use a novel adaptive distance transform to compute the distance function on octree vertices. The computed distance field is sampled more densely in areas of close object spacing, enabling robust and parallelizable GVD surface generation.  We demonstrate our method on a variety of data and show example applications of the GVD in 2D and 3D. \\
+Place abstract Here \\
 
 %   Leave one blank line after the abstract, 
 %   then add the subject categories according to the ACM Classification Index 
 %   (see http://www.acm.org/class/1998/).
 
 \begin{classification} % according to http://www.acm.org/class/1998/
-  \CCScat{I.3.5}{Computer Graphics}{Computational Geometry and Object Modeling}{Boundary representations}
-  \CCScat{I.3.6}{Computer Graphics}{Methodology and Techniques}{Graphics data structures and data types}
-  %\CCScat{Computer Graphics}{I.3.3}{Picture/Image Generation}{Line and curve generation}
+% any clasification items here
 \end{classification}
 
 \end{abstract}
@@ -185,182 +176,41 @@ We present an algorithm to compute \red{an approximation of} the generalized Vor
 %-------------------------------------------------------------------------------
 \section{Introduction}
 \label{sec:intro}
-%An unsigned distance function $f:\mathbb{R}^n\to\mathbb{R}$ gives the minimum distance from a point $p$ to an object $S$ modulus some error, that is, $\inf_{q \in S}{\dist(p, q)} + \epsilon(p)$ where $\dist(p, q)$ is the distance between points $p$ and $q$ and $\epsilon(p)$ is an error measure. Unsigned distance functions, and especially their cousin, the signed distance function, which endows the distance with a sign depending on whether $p$ is inside or outside of an object, are applicable in a large number of applications, including motion path planning, geospatial distance queries, object representation and processing, image quantization, and level-set functions.  One important construct that can be derived from a distance function is the generalized Voronoi diagram (GVD), a generalization of the Voronoi diagram for point sets.
-%
-%Given a set of seed points $\{x_i\}$, or sites, the Voronoi diagram (VD) is the locus of points with at least two closest sites.  It divides space into cells $\{VC_i\}$ such that every point in a cell $VC_i$ is closer to $x_i$ than to any other site.  That is, given a space $X$ where the distance between two points $a,b \in X$ is given as $\dist(a, b)$, the Voronoi cell for a site $x_i$ is $VC_i = \{p \in X| \dist(p, x_i) < \dist(p, x_j), j \ne i\}$. If site $x_i$ is given the label $i$ then we say that every point $p \in VC_i$ has label $i$.  The VD is a bisector of the space between sites and is piecewise linear.
-%
-%The generalized Voronoi diagram lifts the restriction that sites be points, allowing arbitrary objects to be sites.  The definition of the GVD is the same as that of the VD: given a set of objects $\{S_i\}$, a generalized Voronoi cell (GVC) is defined as GVC$_i = \{p \in X | \dist(p, S_i) < \dist(p, S_j), j \ne i\}$ where $\dist(p, S_i) = \inf_{q \in S_i}{\dist(p, q)}$ and can be approximated by a distance function.  Because sites can be arbitrary objects, the GVD is higher order in general \cite{boissonnat2006curved}.  For example, the bisector of a point and a line is a quadratic curve.  Generalized Voronoi diagrams are difficult to compute analytically in general \cite{boissonnat2006curved,hoff1999fast} and so most approaches use a distance field computed by a distance function to construct an approximate GVD.
-%
-%In order for the distance function to be useful in building a GVD it must not only yield a distance, but also the label of the closest site, that is, $f:\mathbb{R}^n\to\mathbb{R}\times L$ where $L$ is the set of all labels.  The GVD is then exactly the set of critical points at which the label changes. We note that the medial axis is the analog to the bisector in a continuous setting, that is, when an infinite number of point sites are used.
-%
-%Distance transforms (DTs) are a popular method of computing a distance field and include chamfer DTs, vector DTs, and the fast marching method \cite{jones20063d}. The majority of existing distance transforms compute distances over a grid.  While appropriate for many applications, uniform grids require a prohibitively large number of pixels (voxels) when the spatial extent is large compared to spacing between objects.  Adaptive distance fields (ADFs) \cite{strain1999fast,frisken2000adaptively} use spatial subdivision methods, such as quadtrees and octrees, to compute distances at higher resolution in areas of detailed object features.
 
-The generalized Voronoi diagram (GVD) is an important structure that divides space into a complex of generalized Voronoi cells (GVCs) around objects.  Similar to the ordinary Voronoi diagram, each GVC contains exactly one object, or site, and every point in the GVC is closer to its contained object than to any other object.  The generalized Voronoi diagram is the boundary of the cell complex, and thus every point on the GVD is equidistant from two or more closest objects.  Applications of the GVD range from motion path planning to GIS analysis to mosaicking.
-
-Ordinary Voronoi diagrams have been studied extensively and efficient algorithms exist to compute them, but the GVD is difficult to compute analytically in general \cite{boissonnat2006curved,hoff1999fast} and so the majority of approaches compute an approximation.  Whereas most algorithms are efficient and robust on certain datasets, all algorithms to our knowledge require inordinate amounts of memory on datasets where objects are very closely spaced relative to the size of the domain.  The failures occur because the space is uniformly gridded.  In such approaches, voxel size must be small enough to resolve object spacings, and if two objects are very close to each other the number of voxels can become prohibitively large.
-
-We present an algorithm to compute a GVD approximation on arbitrary datasets, including those with closely spaced objects.  The approach applies a distance transform over an octree representation of the objects.  Our octree, its associated data structure, and our distance transform are novel and optimized to GVD \red{approximation. For the remainder of the paper, ``GVD'' will refer to the approximated Generalized Voronoi Diagram.}
-
-This paper demonstrates GVD computation on data beyond the computational abilities of previous algorithms, unlocking interesting and important applications.  Our approach allows GVD-based proximity queries and other applications using a larger class of meaningful datasets.
-
+Place introduction here
 
 %\paragraph{Main contributions} In computation of a GVD, we are less concerned with details of objects; rather, we adapt subdivision to most efficiently compute a distance field for GVD computation.  Our main contributions are fourfold.\footnote{Our algorithms support both 2D and 3D. For simplicity, we will use 3D terms (e.g. octree rather than quadtree) when discussing dimension-independent concepts, but will revert to 2D terms when convenient.}
 
-\paragraph{Main contributions} The three primary technical contributions described in the paper are as follows.
-%This paper describes three technical contributions relating to GVD computation.
+\paragraph{Main contributions} Place Contributions Here 
+% Example The three primary technical contributions described in the paper are as follows.
 
 \begin{enumerate}
-\item Most octree decompositions of objects resolve for object feature retention, but ours resolves only for object-object separation, which makes our subdivision computation largely independent of object complexity.  Further, our octree data structure optimizes for octree vertex neighbor finding
-%gains memory savings
-by storing cell vertices in an adjacency list rather than storing cells hierarchically.
-%, and by omitting spatial information from the data structure.
-\item Our distance transform is computed after the octree is built and uses a scheme that requires $\BigO{N\log{N}+M}$ distance computations where $N$ is the number of octree leaf cells and $M$ is a measure of object complexity (e.g., number of polyhedron facets).  Distances are computed on octree vertices with a conjectured error bound.%and are error bounded.
-\item We trace out the GVD over the octree distance field using an efficient and parallelizable $\BigO{N}$ algorithm.  The GVD is guaranteed to separate each object into its own generalized Voronoi cell, i.e., any path from a point $p$ on object $S_i$ to a point $q$ on object $S_j$ must intersect the GVD, a guarantee that is not usually made by uniformly gridded methods.
+\item Items here
 %\item We present an adaptive subdivision scheme that subdivides as necessary to resolve objects.  Object features are resolved only if they closely approach another object.  Our octree data structure gains memory savings by storing cell vertices in an adjacency list rather than storing cells hierarchically, and by omitting spatial information from the data structure.
 %\item Our distance transform is computed after the octree is built and uses a scheme that requires $\BigO{N+M}$ distance computations where $N$ is the number of octree leaf cells and $M$ is a measure of object complexity (e.g. number of facets for polyhedra or local feature size for curved surfaces).  Distances are computed on octree vertices and are error bounded.
 %\item We trace out the GVD over the octree distance field using an efficient $\BigO{N}$ algorithm.  The GVD is guaranteed to separate each object into its own generalized Voronoi cell, i.e., any path from a point $p \in S_i$ to a point $q \in S_j$ must intersect the GVD, a guarantee that is not usually made by uniformly gridded methods.
 %\item We demonstrate various applications of the GVD in 2 and 3 dimensions, including motion path planning, pruning of occluding structures, and exploded diagrams.
 \end{enumerate}
 
-We demonstrate various applications of the GVD in two and three dimensions, including motion path planning, proximity queries, and exploded diagrams.
-
-%Our algorithm has two primary products, a sampled distance field and a GVD.  As the GVD is our primary motivation, the distance transform is designed to support efficient GVD computation.  We have four main steps in our algorithm: 1) build the octree over the set of objects; 2) compute distances on octree vertices using a wavefront expansion; 3) resolve ambiguous cells through further subdivision; 4) compute the GVD surface by finding octree edges with differing end labels.  We discuss each step in detail.
-
-Our GVD algorithm has four main steps: 1) build the octree over the set of objects; 2) compute distances on octree vertices using a wavefront expansion; 3) resolve ambiguous cells through further subdivision; and 4) compute the GVD surface by finding octree edges with differing end labels.  After a discussion of related work, we discuss each step in detail and present applications.
 
 %-------------------------------------------------------------------------------
 % Related work
 %-------------------------------------------------------------------------------
 \section{Related work}
-Related work falls into two categories: algorithms that compute the GVD and algorithms that compute distance fields, many of which are adaptive.
+Place related work here
 
-%\paragraph{To review}
-%\begin{tightenumerate}
-%\item \red{\cite{karras2012maximizing} - GPU octree. Fast, parallel construction of octree of points. Morton codes, so limited to depth 10 when using 32-bit integers.  Since we use n points, we know that number of leaf nodes <= n, so we can block-allocate the octree.  We can't do this in our case.}
-%%\item \cite{decoro2007realtime} - GPU ``probabilistic octree'' - not really applicable
-%\item \red{\cite{bedorf2012sparse} - GPU octree. Points only.  Morton codes.}
-%\item \red{\cite{laine2011efficient} - GPU octree.  Builds over triangles, so not just points.  Octree size not known a priori.  Designed for rendering.  Speed of octree generation is similar (on the order of one second per Mb of octree), but apples-to-apples compare is not possible.}
-%\item \red{\cite{baert2013out} - GPU octree, out-of-core.  Resolution must be determined a priori for partitioning of triangle mesh.  We don't know what resolution we'll need.  Designed for speed of construction, but is still reasonably close to ours (roughly 0.5 seconds per Mb of octree)}
-%\item \red{\cite{zhou2011data} - GPU octree.  Points only.  Morton codes, so limited to depth 10 when using 32-bit integers.}
-%\item \red{\cite{sud2006fast} - Collision detection. GPU: Uniform grid, error in distance field is bounded, but error is proportional to grid cell size.  Used in collision detection, so error upper bound is used to detect in N-body problem and then better techniques are used if GVD-based test is positive.}
-%\item \red{\cite{fischer2006fast} - VD. GPU: k-order VD with point sites}
-%\item \red{\cite{hsieh2005simple} - GVD. GPU: voronoi sites restricted to points, lines and triangles, uniform}
-%\item \red{\cite{vleugels1998approximating} - GVD. adaptive, but sites are convex. no parallelism, expensive.}
-%\item \cite{sud2008real} - Path planning. GPU-based path planning of multiple agents.  Uniform.  \ref{Idea: try computing shortest path in 2D example using ``uniform grid'' or lower-resolution octree}
-%\item Gigavoxels and PantaRay (pointed out by reviewer 97), along with other out-of-core LOD rendering and lighting approaches, typically stream to GPU memory only the data necessary for rendering, which could potentially be useful for large-scale datasets that require out-of-core GVD computation.
-%\end{tightenumerate}
 
-\paragraph{Generalized Voronoi diagrams}
-A theoretical framework for generalized Voronoi diagrams can be found in Boissonnat \etal \shortcite{boissonnat2006curved}. Ordinary Voronoi diagrams are well studied and efficient algorithms exist that compute them exactly \cite{de2008computational}, but exact algorithms for the generalized Voronoi diagram are limited to a small set of special cases \cite{lee1982medial,karavelas2004robust}. In an early work, Lavender \etal \shortcite{lavender1992voronoi} define and compute GVDs over a set of solid models using an octree.  Etzion and Rappoport \shortcite{etzion2002computing} represent the GVD bisector symbolically for lazy evaluation, but are limited to sites that are polyhedra.  Boada \etal \shortcite{boada2002voronoi,boada2008approximations} use an adaptive approach to GVD computation, but their algorithm is restricted to GVDs with connected regions and is inefficient for polyhedral objects with many facets.  Two other works are adaptive \cite{teichmann1997polygonal,vleugels1998approximating} but are computationally expensive and are restricted to convex sites.
-%Teichmann and Teller \shortcite{teichmann1997polygonal} compute the GVD by adaptively subdividing space into a tetrahedral complex, but the method is memory and computationally expensive and is restricted to objects composed of triangles.  The method of Vleugels and Overmars \shortcite{vleugels1998approximating} is also adaptive but sites must be convex. no parallelism, expensive.
-
-In recent years Voronoi diagram algorithms that take advantage of fast graphics hardware have become more common \cite{cao2010parallel,fischer2006fast,hsieh2005simple,rong2007variants,sud2006interactive,sud2006fast,hoff1999fast,wu2008gpu}.  These algorithms are efficient and generalize well to the GVD, but most are limited to a subset of site types.  More importantly, all of them use uniform grids and require an extraordinary number of voxels to resolve closely spaced objects (for example, Figs. \ref{fig:knife} and \ref{fig:path} would require $2^{36}$ and $2^{48}$ voxels, respectively).  To our knowledge, ours is the first fully adaptive algorithm that computes the generalized Voronoi diagram for arbitrary datasets.  %We know of no fully adaptive algorithm that computes the generalized Voronoi diagram on arbitrary datasets.
-
-\paragraph{Distance fields and octrees}
-The GVD is a subset of the locus of distance field critical points, a property that we take advantage of. In that light, the GVD could be a post-processing step to any method that computes a distance field.  Distance transforms compute a distance field, but most are uniformly gridded \cite{jones20063d} and are thus no more suitable than GVD algorithms that use the GPU.
-%Most sequential distance transforms, including chamfer distance transforms, vector distance transforms and the fast marching method \cite{jones20063d}, lack adaptivity and thus require large amounts of memory when feature size is small compared to bounding box size.  However, there has been some excellent work in adaptive methods, mostly in the context of building a distance field for a single object.
-
-% JME: note that in the Bastos work, ``reconstruction'' is reconstruction
-% of the surface from the octree at rendering time.
-Two seminal works adaptively compute the Adaptive Distance Field (ADF) on octree vertices.  Strain~\shortcite{strain1999fast} fully resolves the octree everywhere on the object surface, and Frisken \etal~\shortcite{frisken2000adaptively} resolve the octree fully only in areas of small local feature size.  Both approaches are designed to retain features of a single object rather than resolving between multiple objects, as is required for GVD computation.  Qu \etal \shortcite{qu2004feature} implement an energy-minimizing distance field algorithm that preserves features at the expense of efficiency.  Many recent works on fast octree construction using the GPU are limited to point sites \cite{bedorf2012sparse,karras2012maximizing,zhou2011data}. Most octree approaches that support surfaces \cite{baert2013out,crassin2009gigavoxels,laine2011efficient,lefebvre2007compressed} are designed for efficient rendering, and actual construction of the octree is implemented on the CPU.
-%These algorithms require a specified maximum resolution \textit{a priori}, but in our case, maximum resolution is determined by minimum object spacing, which is computed during octree construction.
-
-Two works \cite{bastos2008gpu,park2010cuda} implement the ADF using GPU parallelism to compute the distance value at sample points, but building the octree itself is done sequentially.  Yin \etal~\shortcite{yin2011fast} compute the distance field entirely on the GPU using a bottom-up approach by initially subdividing into a complete octree, resulting in memory usage that is no better than using a uniform grid.  A method by Kim and Liu~\shortcite{kim2014exact} computes the octree and a BVH entirely on the GPU. However, octree construction is performed on barycenters of triangles, and so a leaf octree cell can have an arbitrary number of triangle intersections as long as it contains no more than one triangle's barycenter.  We have found no GPU octree construction method that can resolve between objects.
-
-%Two works \cite{bastos2008gpu,yin2011fast} have implemented Adaptive Distance Fields using GPGPU.  Bastos and Celes \shortcite{bastos2008gpu} focus on data structures that are efficient for rendering, and their octree construction times appear to be an order of magnitude slower than ours (exact timings were not reported).  Yin \etal \shortcite{yin2011fast} use a bottom-up approach, initially subdividing into a complete octree, yielding a uniform grid at every octree level.  Thus, the memory usage is no better than using a uniform grid.
-
-%Strain~\shortcite{strain1999fast} computes the distance field exactly at vertices of an octree for redistancing when computing level sets.  The octree is fully resolved everywhere on the object surface.  Frisken \etal~\shortcite{frisken2000adaptively} proposed a similar approach that resolves the octree fully only in areas of small local feature size. Storage of the octree was later improved by Lefebvre and Hoppe \shortcite{lefebvre2007compressed} who introduced a compression scheme while maintaining fast random spatial access, which unfortunately requires high compression times.  Qu \etal \shortcite{qu2004feature} implement a distance-field algorithm that preserves features at the expense of efficiency.  Two works \cite{bastos2008gpu,yin2011fast} have implemented Adaptive Distance Fields using GPGPU.  Bastos and Celes \shortcite{bastos2008gpu} focus on data structures that are efficient for rendering, and their ADF construction times appear to be an order of magnitude slower than ours (unfortunately they don't report exact timings).  Yin \etal \shortcite{yin2011fast} use a bottom-up approach, initially subdividing into a complete octree, yielding a uniform grid at every octree level.  Thus, the memory usage is even higher than using a uniform grid, making it impossible to resolve very closely spaced objects on commodity hardware.
-
-%\paragraph{Octrees}
-%Our approach computes a distance field over octree vertices. Octree construction is a major and expensive step, and a large amount of recent research has focused on GPU octree construction.  The fastest approaches are limited to point sites \cite{bedorf2012sparse,karras2012maximizing,zhou2011data}. Approaches that support surfaces \cite{crassin2009gigavoxels,laine2011efficient,lefebvre2007compressed} are generally designed for fast access in rendering applications and have slow octree construction times.
-%Our approach computes a distance field over octree vertices. Octree construction is a major step in our pipeline. Recent works on fast octree construction using the GPU are limited to point sites \cite{bedorf2012sparse,karras2012maximizing,zhou2011data}. Most octree approaches that support surfaces \cite{baert2013out,crassin2009gigavoxels,laine2011efficient,lefebvre2007compressed} are designed for efficient rendering, and actual construction of the octree is implemented on the CPU.  These algorithms require a specified maximum resolution \textit{a priori}; this is a reasonable request for rendering applications, but in our case, maximum resolution is determined by minimum object spacing, which is computed \textit{during} octree construction.
-
-%A non-GPU approach of note is that of Baert \etal~\shortcite{baert2013out}, which generates an octree on out-of-core data.  Their algorithm requires a specified maximum resolution \textit{a priori}; this is a reasonable request for rendering applications, where the user can dictate a desired resolution, but in our case, maximum resolution is determined by minimum object spacing, which can be computed only \textit{after} octree construction.
-
-%Park \etal~\shortcite{park2010cuda} implement a distance field using massive GPU parallelism to compute the signed distance value for a sample point, but building the octree itself is done sequentially.  An improved method by Kim and Liu~\shortcite{kim2014exact} computes the octree and a BVH entirely on the GPU. However, octree construction is performed on barycenters of triangles, and so an octree cell can have an arbitrary number of triangle intersections, but it will be subdivided only if it contains more than one triangle's barycenter.  To our knowledge, there is no fully parallel octree construction method that can resolve between objects.
-
-% Xu and Barbi{\v{c}}~\shortcite{xu2014signed} compute the signed distance field for polygon soups.  Implementation uses multiple cores.  Not GPU accelerated.
-
-%All previous GVD, distance field, and octree construction approaches on the GPU suffer from site type restrictions, uniform gridding, or slow construction times.
-
-%Storage of the octree was later improved by Lefebvre and Hoppe \shortcite{lefebvre2007compressed} who introduced a compression scheme while maintaining fast random spatial access, which unfortunately requires high compression times. 
-
-%\red{However, our octree and distance transform are customized to GVD computation and differ from previous transforms in two ways.  First, our approach gains memory savings by subdividing only until object-object spacings are resolved, rather than fully subdividing on object surfaces or in areas of small local feature size.  The second difference is that we compute the distance field using a novel wavefront distance transform similar in spirit to that of Breen et al~\shortcite{breen19983d}, in that each octree vertex maintains a label and a closest object point.  By maintaining labels and points we are able to efficiently compute the GVD surface.}
-
-% See bak.tex for more
+%\paragraph{Generalized Voronoi diagrams}
+%A theoretical framework for generalized Voronoi diagrams can be found in Boissonnat \etal \shortcite{boissonnat2006curved}. Ordinary Voronoi diagrams are well studied and efficient algorithms exist that compute them exactly \cite{de2008computational}, but exact algorithms for the generalized Voronoi diagram are limited to a small set of special cases \cite{lee1982medial,karavelas2004robust}. In an early work, Lavender \etal \shortcite{lavender1992voronoi} define and compute GVDs over a set of solid models using an octree.  Etzion and Rappoport \shortcite{etzion2002computing} represent the GVD bisector symbolically for lazy evaluation, but are limited to sites that are polyhedra.  Boada \etal \shortcite{boada2002voronoi,boada2008approximations} use an adaptive approach to GVD computation, but their algorithm is restricted to GVDs with connected regions and is inefficient for polyhedral objects with many facets.  Two other works are adaptive \cite{teichmann1997polygonal,vleugels1998approximating} but are computationally expensive and are restricted to convex sites.
 
 %-----------------------------------------------------------
-% Build octree
+% Sweepline Algorithm
 %-----------------------------------------------------------
-\section{Build octree}
-\label{sec:build-octree}
-\red{Our algorithm works in both 2D and 3D. Lacking a dimension-independent term, we use ``octree'' as a general term to refer to both quadtrees and octrees.}
+\section{Sweepline Algorithm}
+\label{sec:sweepline-algorithm}
 
-We construct the octree over a set of objects $S=\{S_i\}$ as a pre-processing step to computing a distance field.  Whereas other methods construct the octree and distance field at the same time \cite{frisken2000adaptively,strain1999fast}, our decoupling allows us to optimize our octree construction implementation by temporarily converting polyhedra to integer-based representations, and using entirely integer arithmetic during octree construction.
-%\old{The size of integer is dependent on object spacing relative to bounding box size.  Let $d$ be the minimum distance between two objects and let $D$ be the object dimension. An octree cell $c$ is said to be empty if $c \cap S = \emptyset$. To resolve close objects, the octree in the region must be subdivided down to cells of edge length $d/\sqrt{D}$.  We assume a minimum length of $d/2\sqrt{D}$ in order to provide for empty ``buffer'' cells between objects for ease of bisector computation (Section \ref{sec:bisector}). If the length of the longest edge of the bounding box of all objects is $h$, then our integer representation must have at least $\log_2{2\sqrt{D}h/d}$ bits.  Any value of $h/d$ can be accommodated provided a sufficiently large integer representation is available.  Our implementation uses 32-bit integers for a maximum octree level of 30 (the integer type must support distance values from bounding box min to bounding box max, i.e., up to $2^{30}\sqrt{D} < 2^{32}$ where $D \le 3$).}
-
-\red{Our octree data structure stores octree vertex adjacencies rather than an explicit cell hierarchy. In this paper, ``vertex'' will always refer to an octree vertex.} Each vertex structure contains an object label, a closest point on an object, and references to its neighbors.
-%\old{Each vertex has up to $2(D)$ neighbors that are indexed by direction ($nbr(0)$ is in the $-x$ direction, $nbr(1)$ in $+x$, $nbr(2)$ in $-y$, and so on).}
-We initialize the system with a single octree cell, represented by $2^D$ vertices\red{, where $D$ is the number of dimensions}.  We use our subdivision predicate \texttt{SHOULD\_SUBDIVIDE(c)}, explained below, to determine whether to subdivide $c$.  To subdivide cell $c$, we first create $3^D-2^D$ new vertices (in 3D, one vertex for each of the 12 edges, one for each of the 6 faces, and one for the center).  We then assign vertex neighbors appropriately (see Figures \ref{fig:vertex-structure1} and \ref{fig:vertex-structure2}).  After intersecting new subcells with objects that intersect $c$, we call \texttt{SHOULD\_SUBDIVIDE} on each subcell and recursively subdivide if necessary.
-
-\begin{figure}
-  \centering
-  \begin{minipage}{0.5\columnwidth}
-    \subfloat[][]{
-      \label{fig:vertex-structure1}
-      \includegraphics[width=0.98\textwidth]{filler.png} } \\
-    \subfloat[][]{
-      \label{fig:vertex-structure2}
-      \includegraphics[width=0.98\textwidth]{filler.png} }
-  \end{minipage}
-  \hfill
-  \begin{minipage}{0.43\columnwidth}
-    \subfloat[][]{
-      \label{fig:visible-vertices}
-      \includegraphics[width=0.98\textwidth]{filler.png} }
-\end{minipage}
-  \caption{\red{Quadtree (octree in 3D) cell} representation.
-    \protect\subref{fig:vertex-structure1} In two dimensions, a \red{quadtree} cell is defined by four vertices.  Each vertex maintains references to its neighbors \red{with the \textit{nbrs} array}.  Two intersecting objects are shown in red and yellow.
-    \protect\subref{fig:vertex-structure2} When a cell is subdivided, vertices are added and each vertex's neighbor references are updated.
-    \protect\subref{fig:visible-vertices} $v$ is shaded and vertices that are visible from $v$ are circled.  A vertex $w$ is visible from $v$ if $w$ is a neighbor of $v$ or if the line segment $\overline{vw}$ has no intersections with any octree cell boundaries.}
-%  \label{fig:visible-vertices}
-  \label{fig:2d-octree-diagram}
-\end{figure}
-
-%\old{Our data structure does not explicitly encode a hierarchy.}
-Our adjacency structure is amenable to our most important operations, which are to find an edge neighbor for the \texttt{SHOULD\_SUBDIVIDE} predicate, and finding visible vertices for the wavefront propagation.  Finding an edge neighbor is $\BigO{1}$ with our octree representation.  Gargantini's~\shortcite{gargantini1982effective} data structure has logarithmic neighbor finding, and Frisken and Perry's~\shortcite{frisken2002simple}, which has fast neighbor finding like ours, requires significant extra storage.  Computational complexity of finding visible vertices is asymptotically equal to the number of visible vertices and is discussed in Section \ref{sec:distance-transform}.  Our nonhierarchical representation is not suitable for general purposes, however, because the point location operation is $\BigO{N}$.  If the need for point location arises, then our data structure can be converted to a traditional hierarchical representation in $\BigO{N\log{N}}$ time.
-
-%Both operations are $O(1)$ with our octree representation.  Other representations include Gargantini's~\shortcite{gargantini1982effective} which has logarithmic neighbor finding, and Frisken and Perry's~\shortcite{frisken2002simple}, which has very fast neighbor finding like ours, but requires significant extra storage.  Of course, our point location operation is an expensive $O(n)$, but we have no need for it.
-
-%\old{We do not store a vertex's spatial position, which results in memory savings of three floating point values per vertex.  Transient position information is computed as needed during octree construction or traversals, when position of a neighboring vertex is available on the call stack.}
 
 %\old{In addition to the octree data structure, our octree construction differs from previous methods in our predicate for deciding whether to subdivide a cell.}
-Previous algorithms ensure that object features are resolved well by subdividing all nonempty cells up to a maximum level.  More sophisticated feature resolution predicates have also been used (e.g., the bilinear interpolation test of Frisken \etal~\shortcite{frisken2000adaptively}). Our subdivision predicate is different in that we are primarily interested in resolving between objects. \red{Define a face-neighbor of cell $c$ to be a cell that shares a face with $c$.} The predicate \texttt{SHOULD\_SUBDIVIDE(c)} works as follows.  Subdivide $c$ if (1) $c$ intersects more than one object, or (2) a face-neighbor of $c$ intersects with a different object. Test (1) ensures that every leaf cell after construction will intersect at most one object, and test (2) ensures that objects will be separated from each other by at least one empty buffer cell.  One advantage of \texttt{SHOULD\_SUBDIVIDE(c)} is that octree complexity becomes independent of object complexity.  As shown in Figure \ref{fig:2d-6}, even object self-intersections or nonmanifold points have no effect on octree depth, whereas the octree would be fully subdivided in those areas if using a conventional subdivision predicate.
-
-\begin{figure}
-  \centering
-  \subfloat[][]{
-    \label{fig:2d-6}
-    \begin{tikzpicture}
-      \node[anchor=south west,inner sep=0] at (0,0) {
-        \includegraphics[width=0.31\columnwidth]{filler.png}};
-      \draw [very thick,->] (2.55,1.48) -- (2.15,1.48);
-      \draw [very thick,densely dotted,->] (0.6,0.9) -- (1.0,0.6);
-    \end{tikzpicture}
-  }
-  \subfloat[][]{
-    \label{fig:2d-7}
-    \includegraphics[width=0.31\columnwidth]{filler.png} }
-  \subfloat[][]{
-    \label{fig:2d-4}
-    \includegraphics[width=0.31\columnwidth]{filler.png} }
-  \caption{Quadtree, GVD, and distance field of intersecting, embedded, and nonmanifold 2D objects.
-    \protect\subref{fig:2d-6} The quadtree is subdivided only far enough so that there is a one cell buffer between objects and so that ambiguous cells are resolved.  Object self-intersections and nonmanifold points have no effect on quadtreetree depth (solid arrow), but intersections between objects are subdivided to the maximum level (dotted arrow).
-    \protect\subref{fig:2d-7} Computed GVD.
-    \protect\subref{fig:2d-4} The distance field computed from the quadtree vertices.
-  }
-  \label{fig:predicate}
-\end{figure}
 
 %We have two options for predicates to use in deciding whether to subdivide a cell.  The first is for GVD computation.  Given a cell $c$, subdivide if (1a) $|\{S_i|c \cap S_i \ne \emptyset \}| > 1$ (if the cell intersects more than one object), or (1b) $n \in nbrs(c) \cap S_j \ne \emptyset, j \ne i$ where $nbrs(c)$ is the set of edge-neighbors of $c$ (if an edge-neighbor of $c$ intersects with a different object). Test (1a) ensures that every leaf cell after construction will intersect at most one object, and test (1b) ensures that objects will be separated from each other by at least one empty buffer cell.
 %
@@ -372,41 +222,48 @@ Previous algorithms ensure that object features are resolved well by subdividing
 \section{Distance transform}
 \label{sec:distance-transform}
 %We compute the distance field using a novel wavefront distance transform that is similar in spirit to that of \cite{breen19983d}, with the fundamental difference being that we compute using an octree rather than a uniform grid.
-Our distance transform is inspired by that of Breen \etal~\shortcite{breen19983d}, with the fundamental difference being that we compute using an octree rather than a uniform grid.  Each octree vertex has two properties -- a label and a closest point.
-%An octree cell $c$ is said to be empty if $c \cap S = \emptyset$.
-An octree vertex is empty if all incident cells are empty. Define the euclidean distance between two points $\dist(a,b)$ to be infinity if either $a$ or $b$ is \texttt{null} and let $\{S_i\}$ be the set of objects intersecting octree cells incident to a vertex $v$. The two main steps of distance computation are initialization of nonempty vertices and wavefront expansion.  Algorithm \texttt{COMPUTE\_DISTANCES} comprises both steps.
+%Our distance transform is inspired by that of Breen \etal~\shortcite{breen19983d}, with the fundamental difference being that we compute using an octree rather than a uniform grid.  Each octree vertex has two properties -- a label and a closest point.
+%%An octree cell $c$ is said to be empty if $c \cap S = \emptyset$.
+%An octree vertex is empty if all incident cells are empty. Define the euclidean distance between two points $\dist(a,b)$ to be infinity if either $a$ or $b$ is \texttt{null} and let $\{S_i\}$ be the set of objects intersecting octree cells incident to a vertex $v$. The two main steps of distance computation are initialization of nonempty vertices and wavefront expansion.  Algorithm \texttt{COMPUTE\_DISTANCES} comprises both steps.
 
-%Define the euclidean distance between two points $\dist(a,b)$ to be infinity if either $a$ or $b$ is \texttt{null}.  Let $\{S_i\}$ be the set of objects intersecting octree cells incident to a vertex $v$.
+% TODO place algorithm
 
 \algorithmspace
 \begin{algorithm}
   \DontPrintSemicolon
 %  \LinesNumbered
-  \KwIn{Octree}
+  \KwIn{events}
   \BlankLine
   \tcp{Initialization}
-  \ForEach{vertex v in Octree}{
-    \If{v is nonempty}{
-      point[v] := closest point on $\{S_i\}$ to v\;
-      label[v] := $i$\;
-    }
+  $beachline$ := the line equidistant between the event and the event\;
+  $closeEventPoints$ := the set of all close \;
+  \While{events > 0 and exists events in sweepline path}{
+  	let $e$ := the next event\;
+    \If{$e$ is close event}{
+    	\If{$e$ is live}{
+    	  update arch node points\;
+    	  remove $e.archNode$ from the $beachline$\;
+% 		  \ForEach{$ev$ in events}{
+% 		  	\If{$ev.y$ less than $e.y$ - \varepsilon}{
+% 		  		add $ev$ to events\;
+% 		  		\If{$ev$ is close event}{
+% 		  			add $ev$ to $closeEventPoints$\;
+% 		  		}
+% 		  	}
+% 		  }
+		}
+   	}
     \Else{
-      point[v] := null\;
-    }
-%    dist[v] := $\dist(v, point[v])$\;
-  }
-  V := the set of all vertices in Octree\;
-  \tcp{Wavefront expansion}
-  \While{V is not empty}{
-%    v := vertex in V with minimum $|$v-point[v]$|$\;
-    v := vertex in V with minimum $\dist(v, point[v])$\;
-    remove v from V\;
-    \ForEach{visible vertex a from v}{
-      \If{$\dist(a, point[v]) < \dist(a, point[a])$}{
-        point[a] := point[v]\;
-        label[a] := label[v]\;
-        reorder a in V\;
-      }
+   	  \tcp{Site event}
+   	  add $e$ to the $beachline$
+%   	  \ForEach{$ev$ in events}{
+%   	  	\If{$ev.y$ less than $e.y$ - \varepsilon}{
+%   	  		add $ev$ to events
+%   	  		 \If{$ev$ is close event}{
+%   	  		 	add $ev$ to $closeEventPoints$
+%   	  		 }
+%   	  	}
+%   	  }
     }
   }
 \caption{COMPUTE\_DISTANCES}
