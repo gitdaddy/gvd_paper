@@ -186,10 +186,6 @@ Place introduction here
 
 \begin{enumerate}
 \item Items here
-%\item We present an adaptive subdivision scheme that subdivides as necessary to resolve objects.  Object features are resolved only if they closely approach another object.  Our octree data structure gains memory savings by storing cell vertices in an adjacency list rather than storing cells hierarchically, and by omitting spatial information from the data structure.
-%\item Our distance transform is computed after the octree is built and uses a scheme that requires $\BigO{N+M}$ distance computations where $N$ is the number of octree leaf cells and $M$ is a measure of object complexity (e.g. number of facets for polyhedra or local feature size for curved surfaces).  Distances are computed on octree vertices and are error bounded.
-%\item We trace out the GVD over the octree distance field using an efficient $\BigO{N}$ algorithm.  The GVD is guaranteed to separate each object into its own generalized Voronoi cell, i.e., any path from a point $p \in S_i$ to a point $q \in S_j$ must intersect the GVD, a guarantee that is not usually made by uniformly gridded methods.
-%\item We demonstrate various applications of the GVD in 2 and 3 dimensions, including motion path planning, pruning of occluding structures, and exploded diagrams.
 \end{enumerate}
 
 
@@ -209,24 +205,7 @@ Place related work here
 \section{Sweepline Algorithm}
 \label{sec:sweepline-algorithm}
 
-
-%\old{In addition to the octree data structure, our octree construction differs from previous methods in our predicate for deciding whether to subdivide a cell.}
-
-%We have two options for predicates to use in deciding whether to subdivide a cell.  The first is for GVD computation.  Given a cell $c$, subdivide if (1a) $|\{S_i|c \cap S_i \ne \emptyset \}| > 1$ (if the cell intersects more than one object), or (1b) $n \in nbrs(c) \cap S_j \ne \emptyset, j \ne i$ where $nbrs(c)$ is the set of edge-neighbors of $c$ (if an edge-neighbor of $c$ intersects with a different object). Test (1a) ensures that every leaf cell after construction will intersect at most one object, and test (1b) ensures that objects will be separated from each other by at least one empty buffer cell.
-%
-%The second predicate is for use in building a distance field suitable for distance queries at arbitrary points and ensures that object features are well-resolved (figure \ref{fig:field-interp}).  The simplest predicate is to subdivide if the cell is nonempty up to a maximum level.  More sophisticated feature resolution predicates can be used (e.g. the bilinear interpolation test of \cite{frisken2000adaptively}).
-
-%-----------------------------------------------------------
-% Distance transform
-%-----------------------------------------------------------
-\section{Distance transform}
-\label{sec:distance-transform}
-%We compute the distance field using a novel wavefront distance transform that is similar in spirit to that of \cite{breen19983d}, with the fundamental difference being that we compute using an octree rather than a uniform grid.
-%Our distance transform is inspired by that of Breen \etal~\shortcite{breen19983d}, with the fundamental difference being that we compute using an octree rather than a uniform grid.  Each octree vertex has two properties -- a label and a closest point.
-%%An octree cell $c$ is said to be empty if $c \cap S = \emptyset$.
-%An octree vertex is empty if all incident cells are empty. Define the euclidean distance between two points $\dist(a,b)$ to be infinity if either $a$ or $b$ is \texttt{null} and let $\{S_i\}$ be the set of objects intersecting octree cells incident to a vertex $v$. The two main steps of distance computation are initialization of nonempty vertices and wavefront expansion.  Algorithm \texttt{COMPUTE\_DISTANCES} comprises both steps.
-
-% TODO place algorithm
+ Place algorithm section here
 
 \algorithmspace
 \begin{algorithm}
@@ -237,9 +216,9 @@ Place related work here
   \tcp{Initialization}
   $beachline$ := the set of arc nodes\;
   $closeEventPoints$ := the set of all close events\;
-  $events$ := a list of sorted points or sites\;
+  $events$ := a priority queue of sorted points or sites\;
   \While{$events$ > 0}{
-  	let $e$ := the next event in $events$\;
+  	let $e$ := next event in $events$ by popping of the top\;
   	move the sweepline to include point $e$\;
     
     \If{$e$ is a close event}{
@@ -249,7 +228,7 @@ Place related work here
     	  
     	  \ForEach{$ev$ in $newEvents$}{
     	  	\If {$ev$ is below $e$}{
-    	  		add $ev$ to $events$\;
+    	  		add $ev$ to $events$ in sorted order\;
     	  		\If{$ev$ is a close event}{
     	  			add $ev$ to $closeEventPoints$
     	  		}
@@ -263,7 +242,7 @@ Place related work here
    	  add $e$ to the $beachline$ and return $newEvents$
    	   \ForEach{$ev$ in $newEvents$}{
    	  	\If {$ev$ is below $e$}{
-   	  		add $ev$ to $events$\;
+   	  		add $ev$ to $events$ in sorted order\;
    	  		\If{$ev$ is a close event}{
    	  			add $ev$ to $closeEventPoints$
    	  		}
@@ -271,15 +250,10 @@ Place related work here
    	  }
     }
   }
-\caption{COMPUTE\_DISTANCES}
-\label{alg:compute-distances}
+\caption{Sweepline Algorithm}
+\label{alg:sweepline-algorithm}
 \end{algorithm}
 \algorithmspace
-
-Algorithm \texttt{COMPUTE\_DISTANCES} initializes the point assignments of nonempty vertices (Figures \ref{fig:wavefront6} and \ref{fig:wavefront2}). All closest points $point[v]$ (ties are broken arbitrarily) are stored as an array and each vertex maintains an index into the array, taking advantage of the fact that roughly half of computed closest points are shared among multiple vertices.  The closest points are computed exactly: if $\alpha(v)$ is the distance from $v$ to its closest neighbor, then only surface points in cells within $\sqrt{D} \alpha(v)$ of the vertex need be searched, making the loop an $\BigO{N + M}$ operation where $N$ is the number of octree leaf cells and $M$ is a measure of object complexity (e.g., number of triangles).  All octree cells are then added to the priority queue, an $O(N)$ or $O(N \log{N})$ operation, depending on the type of heap used for the queue.  It then iterates over vertex priority queue \texttt{V} in multiple expanding wavefronts, which are similar in behavior to Dijkstra shortest-cost path wavefronts in that the priority queue is sorted on distance to the nearest object.  The vertex $v$ at the front of the queue is the closest vertex to an object among all vertices in the queue, modulo an error term discussed below.  The assigned closest point $p$ is pushed to all vertices that are visible from $v$.  A vertex $w$ is visible from $v$ if $w$ is a neighbor of $v$ or if the intersection of the line segment $\overline{vw}$ with the edges of the octree is empty (Figure \ref{fig:visible-vertices}). Visible vertices are found efficiently using our vertex adjacency data structure.  In 2D, a simple walk around the cell is sufficient.  For example, in Figure \ref{fig:visible-vertices}, a walk is done beginning from vertex $v$ in the positive $x$ direction.  At each vertex, the walk turns left if possible, otherwise it continues forward.  Once the walk returns to $v$, the visible vertices in the upper-right cell are found, and walks are performed for the other three cells.  The complexity of the walk is $O(m)$, where $m$ is the number of visible vertices.
-
-The number of vertices that are visible from $v$ is dependent on gradation.  Let $c_1$ and $c_2$ be adjacent cells, and let $L(c)$ be the octree level of cell $c$.  Without loss of generality, let $L(c_1) > L(c_2)$.  Gradation between adjacent cells $c_1$ and $c_2$ is defined to be $L(c_1) - L(c_2)$.  Let $g$ be the maximum gradation of any two adjacent cells.  Then the number of visible vertices is $O(2^{g(D-1)})$.  To see this, consider the 2D vertex in Figure \ref{fig:visible-vertices}.  Let the upper-right cell in the figure be cell $c$.  $v$ has two ``opposite'' edges through cell $c$, where an opposite edge is one that is not incident to $v$.  $v$ has four incident cells, for a total of eight opposite edges.  Let each incident cell be maximally graded, such that each opposite edge is incident to $2^g$ cells.  Then there are $(8)(2^{g(D-1)}) = O(2^g)$ visible vertices.  Derivation in the 3D case is similar.  If the number of visible vertices becomes a significant factor in practice, then the octree can be constructed with bounded gradation (similar to the approach of Strain~\shortcite{strain1999fast}), thereby bounding the number of visible vertices with a constant.
-%If cells adjacent to $c$ are all $g$ levels down from $c$, then there are...
 
 \begin{figure}
   \centering
@@ -302,383 +276,35 @@ The number of vertices that are visible from $v$ is dependent on gradation.  Let
     \label{fig:sweepF}
     \includegraphics[width=0.32\columnwidth]{fig1_f.png} }
   \caption{Sweepline Algorithm
-    \protect\subref{fig:sweepA} Place Explanation Here
-    \protect\subref{fig:sweepB} Place Explanation Here
-    \protect\subref{fig:sweepC} Place Explanation Here
-    \protect\subref{fig:sweepD}  %(as in \protect\subref{fig:wavefront6}).
-    \protect\subref{fig:sweepE} Place Explanation Here
-    \protect\subref{fig:sweepF} Place Explanation Here
+    \protect\subref{fig:sweepA} Here the algorithm has processed the first two events and multiple arc nodes have been added to the beach line, in which the leaf nodes represent active sites and the parent nodes are edge connections (as shown in \protect\subref{fig:sweepD}). It is important to note the beach line includes the edge connection 2-3 even though it is not shown here. The line created by this connection is the same as that made by 1-2.
+    \protect\subref{fig:sweepB} Once the algorithm is able to triangulate a close event, it removes the arc node that formed it. This is illustrated in \protect\subref{fig:sweepE} where there is no longer an edge connection between 1-2 or 4-1.
+    \protect\subref{fig:sweepC} When a site is enclosed completely by vertexes it is removed entirely from the beach line (as shown in \protect\subref{fig:sweepF}).
   }
   \label{fig:wavefront}
-\end{figure}
-
-Our algorithm approximates distances on empty vertices, and our empirical tests suggest an error bound of $\frac{\e(v)}{\d(v)} \le \frac{1}{2}$, where $e(v)$ is the error at a vertex $v$ and $\d(v)$ is the distance from $v$ to the nearest point on $S$, implying that the distance transform is a $\frac{3}{2}$-approximation.  The error occurs because only closest points assigned in the wavefront initialization are propagated in the wavefront expansion.  Distance transform time complexity is $O(N+M)$ for the initialization step, $\le O(N\log{N})$ for the priority queue initialization, and $O(2^{g(D-1)}N\log{N})$ for the wavefront expansion, where the reordering of $a$ in $V$ provides the $\log{N}$ factor.  Thus, total time complexity of the transform is $O(2^{g(D-1)}N\log{N} + M)$, or $O(N\log{N} + M)$ if gradation is bounded by a constant.
-
-% Our complexity bound highlights an advantage of decoupling octree construction and distance computation.  The top-down approaches of \cite{strain1999fast} and \cite{frisken2000adaptively} compute exact distances at each octree level for $\BigO{LF}$ where $L$ is the maximum octree level.
-
-%\paragraph{Distance field}
-%\texttt{COMPUTE\_DISTANCES} finds distances on quadtree vertices. This labeled subdivision data structure can be used as a distance representation.  That is, given any point we can quickly find an approximation of its distance from its closest site. If we desire to query our data structure for distances at arbitrary points (figure \ref{fig:field-interp}) we should use the feature resolution predicate (section \ref{sec:build-octree}) during octree construction and the octree should be stored as a hierarchy, which is better suited to point location queries (i.e., given a point $p$, find the octree leaf cell that contains $p$).  The octree can either be stored hierarchically at the outset, requiring changes to the octree construction implementation, or it can be converted to a hierarchy from the adjacency representation.
-%
-%The typical approach to computing the distance at a point given an ADF is to interpolate using distances of nearby vertices \cite{strain1999fast,frisken2000adaptively}. This is advantageous in that vertices need store only a distance and not the actual closest point, and the distance field will be $C^0$ continuous.  However, distance extrema will be limited to the octree vertices.  Our approach is the following: given a point $p$ and its containing leaf octree cell $c$, choose the closest point among the closest points of vertices on $c$.  That is, $point[p] = \argmin_{point[v \in c]} \dist(p, point[v])$.  While the distance field is not continuous, the benefit is that distance extrema in cell interiors can be found.
-
-Although not designed specifically to do so, our distance-assigned octree vertices can be used to compute distance values of arbitrary points in the domain.  Given a point $p$ and its containing leaf octree cell $c$, choose the closest point among the closest points of vertices on $c$.  That is, $point[p] = \argmin_{point[v \in c]} \dist(p, point[v])$. The assigned distance is $|point[p]-p|$.  See Figure \ref{fig:2d-4} for a distance field example.
-% We note that while the distance fields computed by previous approaches \cite{strain1999fast,frisken2000adaptively} are continuous, ours is not.
-% While the distance field is not continuous, the benefit is that distance extrema in cell interiors can be found.
-
-%-----------------------------------------------------------
-% Resolve ambiguities
-%-----------------------------------------------------------
-\section{Resolve ambiguities}
-
-\newcommand{\vlabel}{\mathscr{L}}
-
-%Our distance function is built over a discretized space that can potentially yield ambiguities in the topology of the GVD.  We call an octree cell ambiguous if the topology of the GVD in the cell is ambiguous.  We test for cell ambiguity as follows. 0- and 1-dimensional cells are unambiguous.  Let $G_c$ be a restriction of the octree vertex graph $G$ to cell $c$.  Collapse all edges in $G_c$ that have endpoints with identical labels.  Call the new graph $\overline{G_c}$. A $(D>1)$-dimensional cell $c$ is unambiguous if $\overline{G_c}$ is a clique and all $D-1$ faces are unambiguous.  See Figure \ref{fig:ambiguous}.  Ambiguous cells are subdivided recursively until the ambiguity is resolved or a threshold level is reached (Figure \ref{fig:bisector-ambiguity}).
-
-Our distance function is built over a discretized space that can potentially yield ambiguities in the topology of the GVD.  We call an octree cell ambiguous if the topology of the GVD in the cell is ambiguous.  We test for cell ambiguity as follows. Let $G$ be an embedded graph with vertices and edges corresponding to octree vertices and edges, respectively.  Let $G_c$ be the intersection of $G$ with octree cell $c$. See Figure \ref{fig:ambiguous}. Collapse all edges in $G_c$ that have endpoints with identical labels.  Call the new graph $\overline{G_c}$. Cell $c$ is unambiguous if $\overline{G_c}$ is a $(\le D)$-dimensional simplex.
-%The proof is that every generalized Voronoi cell (GVC) in $c$ is incident with every other GVC in $c$ because every vertex in a simplex shares an edge with every other vertex.
-\begin{proof}
-Let $M=\{M_i\}$ be the set of generalized Voronoi cells (GVCs) that intersect with $c$.  Because every vertex in a simplex shares an edge with every other vertex, the topology of the GVD in $c$ is given by $M_i \cap M_j \cap c \ne \emptyset$.
-\end{proof}
-
-Ambiguous cells are subdivided recursively until the ambiguity is resolved or a threshold subdivision level is reached (Figure \ref{fig:bisector-ambiguity}).  If the threshold is reached then the topology is decided as described in Section \ref{sec:bisector}.
-
-\begin{figure}
-  \centering
-  \fbox{\subfloat[][$G_x$]{
-    \label{fig:ambiguous3}
-    \includegraphics[width=0.16\columnwidth]{filler.png}
-  }
-  \subfloat[][$\overline{G_x}$]{
-    \label{fig:ambiguous4}
-    \includegraphics[width=0.16\columnwidth]{filler.png}
-  }
-  \subfloat[][$\overline{G_x}$]{
-    \label{fig:ambiguous5}
-    \includegraphics[width=0.16\columnwidth]{filler.png}
-  }}
-  \fbox{\subfloat[][$G_y$]{
-    \label{fig:ambiguous1}
-    \includegraphics[width=0.16\columnwidth]{filler.png}
-  }
-  \subfloat[][$\overline{G_y}$]{
-    \label{fig:ambiguous2}
-    \includegraphics[width=0.16\columnwidth]{filler.png}
-  }}
-  \caption{
-Ambiguous cells are detected by collapsing edges with identically labeled vertices.
-    \protect\subref{fig:ambiguous3} Cell $x$ is ambiguous because $\overline{G_x}$ is not a simplex.
-    \protect\subref{fig:ambiguous4}-\protect\subref{fig:ambiguous5} Two possible GVD topologies in cell $x$ are shown.
-    \protect\subref{fig:ambiguous1} Cell $y$ is unambigous.
-    \protect\subref{fig:ambiguous2} Simplex $\overline{G_y}$ induces a unique GVD topology.
-  }
-  \label{fig:ambiguous}
-\end{figure}
-
-\begin{figure}
-  \centering
-  \subfloat[][]{
-    \label{fig:bisector-ambiguity0}
-    \begin{tikzpicture}
-      \node[anchor=south west,inner sep=0] at (0,0) {
-        \includegraphics[width=0.3\columnwidth]{filler.png}};
-      \draw [red,thick,->] (2.2,1.57) -- (1.9,1.57);
-      \draw [red,thick,->] (2.2,1.57) -- (2.2,1.27);
-    \end{tikzpicture}
-  }
-  \hspace{1cm}
-  \subfloat[][]{
-    \label{fig:bisector-ambiguity1}
-    \begin{tikzpicture}
-      \node[anchor=south west,inner sep=0] at (0,0) {
-        \includegraphics[width=0.3\columnwidth]{filler.png}};
-    \end{tikzpicture}
-  }
-  \caption{The effect of ambiguous cells and how they are removed.
-    \protect\subref{fig:bisector-ambiguity0} The cells indicated by the arrows are ambiguous, causing the GVD to be topologically incorrect.
-    \protect\subref{fig:bisector-ambiguity1} The ambiguities are resolved by recursive subdivision.}
-  \label{fig:bisector-ambiguity}
-\end{figure}
-
-%-----------------------------------------------------------
-% Compute GVD surface
-%-----------------------------------------------------------
-\section{Compute GVD surface}
-\label{sec:bisector}
-
-With the distance function in place we compute the generalized Voronoi diagram, or the set of all points that have at least two closest points with differing labels, \red{using an algorithm inspired by marching cubes \cite{lorensen1987marching}}. We store the GVD as sets of \red{simplices (i.e. line segments in 2D, triangles in 3D)}, one set per object, representing the boundary of the generalized Voronoi cell (GVC) for that object.  Each simplex is stored twice, once for each GVC it borders, oriented toward the inside of the GVC.
-
-We first compute which edges of the octree intersect the GVD by considering each octree edge $e$ with endpoint vertices $(e_0, e_1)$.
-%$e_{j \in \{0,1\}}$.
-Let $\vlabel(v)$ be the label of octree vertex $v$.  If $\vlabel(e_0) \ne \vlabel(e_1)$, then $e$ intersects the GVD.  Let $a=point[e_0]$ and $b=point[e_1]$.  Assume without loss of generality that $e$ is aligned with the x-axis.  Cases of alignment with $y$ and $z$ are similar.  We seek point $p=(x,y,z) \in e$ such that $\dist(a,p)=\dist(b,p)$ (see Figure \ref{fig:compute-q}). In our euclidean setting this reduces to
-\begin{equation}
-x = \frac{2y(a_y-b_y)+2z(a_z-b_z)+b^Tb - a^Ta}{2(b_x-a_x)}
-\end{equation}
-
-\begin{figure}
-  \centering
-  \begin{tikzpicture}
-    \node[anchor=south west,inner sep=0] at (0,0) {
-      \includegraphics[width=0.5\columnwidth]{filler.png}
-    };
-    \node[] at (0.9,1.5) {$a$};
-    \node[] at (3.2,2.05) {$b$};
-    \node[] at (1.8,1.03) {$e$};
-    \node[] at (2.43,0.6) {$p$};
-  \end{tikzpicture}
-%  \caption{Computing the intersection of the bisector of objects $a$ and $b$ with a quadtree edge.}
-  \caption{Computing the intersection of the GVD with quadtree edge $e$. $a$ and $b$ are closest points on objects, and $p$ is the intersection of edge $e$ with the GVD.
-    %The GVD locally bisects points $a$ and $b$.
-  }
-  \label{fig:compute-q}
-\end{figure}
-
-Once all edge bisectors for a cell are calculated, we fit \red{simplices} (Figure \ref{fig:bisector}). Suppose bisector $p_i$ lies on edge $e^i$. We connect bisector points on a 2D face $f$ by creating line segments between each bisector $p_i \in f$ and the centroid of all face bisectors $r_f = \sum p_i / |\{p_i\}|$.  If the 2D cell is unambiguous there will be at most three bisectors.  In the case that the cell is subdivided to the threshold level without resolving ambiguity then the centroid $r_f$ becomes an interface to four or more generalized Voronoi cells. Other approaches to ambiguity resolution include \cite{natarajan1994generating,nielson1991asymptotic,sohn2007topology}.   We label each line segment by the labels of the vertices adjacent to $p_i$, that is,  $\vlabel(p_i) = \alpha\beta$ where $\vlabel(e^i_0) = \alpha$ and $\vlabel(e^i_1) = \beta$. \red{If we are computing a 2D GVD then we are done.}
-
-\red{In 3D,} given a cell $c$, we first find the line segment complex of each 2D face $c$ using the 2D algorithm and union all segments into a set $C_c$.  We then form triangles from each segment in $C_c$
-%$h \in C_c$
-to the 3D centroid $r_c$ of the bisectors (Figure \ref{fig:bisector3}).  Triangle $t_i$ has vertices $(p_i, r_f, r_c)$. We maintain a set $T_{\alpha}$ of triangles assigned to the GVC of the object with label $\alpha$.
-%We know that triangles with the same vertices as $t_i$ must be added to $T_{\alpha}$ and $T_{\beta}$ since $\vlabel(p_i) = \alpha\beta$.
-To determine the orientation we use the normal $n_{t_i}$ and the vertex $v_{p_i}^{\alpha}$ adjacent to $p_i$ with label $\alpha$. If $n_{t_i} \cdot (v_{p_i}^{\alpha}-r_c) < 0$, then we invert $t_i$ before adding it to $T_{\alpha}$, and similarly with $T_{\beta}$. The resulting GVD is water tight and each GVC is orientable.
-
-The GVD surfacing algorithm is parallelizable, as the \red{simplices} in each octree cell are computed independently of all other octree cells.
-
-\begin{figure}
-  \centering
-  \subfloat[][]{
-    \label{fig:bisector2}
-    \includegraphics[width=0.4\columnwidth]{filler.png} }
-  \subfloat[][]{
-    \label{fig:bisector3}
-    \includegraphics[width=0.4\columnwidth]{filler.png} }
-  \caption{GVD surface generation.
-    \protect\subref{fig:bisector2} The 2D algorithm creates GVD edges from bisectors $\{p_i\}$ to the centroid.  Each new GVD edge is given the two labels of the incident octree edge.
-    \protect\subref{fig:bisector3} After finding the 2D GVD on its faces, the 3D cell fits triangles from 2D edges to the centroid.  %Each triangle is assigned to two sets of triangles, one for each label assigned to $p_i$.
-  }
-  \label{fig:bisector}
 \end{figure}
 
 %-------------------------------------------------------------------------------
 % Results
 %-------------------------------------------------------------------------------
-\section{Results and applications}
-Our implementation\footnote{Source code is available at \url{http://cedmav.org/research/project/33-gvds.html}.} of the algorithm supports \red{polygons and} triangulated objects, and our wavefront initialization step is implemented on the GPU using OpenCL. All tests were run on a MacBook Pro laptop with a dual-core 2.9 GHz processor, 8 GB memory, and Intel HD 4000 graphics card. Figure \ref{fig:bunny} shows our implementation of the GVD computation pipeline, and Figure \ref{fig:pipes} shows the computed GVD on a more challenging dataset.  We compare our method with other work and then show examples in three application settings: path planning, proximity queries, and exploded diagrams.
-
-\subsection{Comparison to other methods}
-
-Our GVD computations use commodity hardware, even on the most challenging datasets.  Uniformly gridded approaches \cite{cao2010parallel,fischer2006fast,hsieh2005simple,rong2007variants,sud2006interactive,sud2006fast,hoff1999fast,wu2008gpu,yin2011fast} require $2^{Dn}$ voxels, where $D$ is the dimension and $n$ is the number of octree levels needed to resolve objects.  Table \ref{tab:timings} shows our results on datasets that would require prohibitive numbers of voxels using uniformly gridded methods.%timings on datasets that would require between $2^{24}$ and $2^{48}$ uniformly gridded voxels.
-
-In addition to datasets with closely spaced objects, our algorithm works on intersecting and embedded objects, nonmanifold objects, and objects with multiple connected components (see Figures \ref{fig:2d-6}, \ref{fig:2d-7}, and \ref{fig:heart}), which are not supported by Boada \etal~\shortcite{boada2008approximations}.
-
-%\old{The sparse voxel octree method~\mbox{\shortcite{laine2011efficient}} is one of a class of algorithms that build an octree based on object surfaces \mbox{\cite{baert2013out,bastos2008gpu,crassin2009gigavoxels,lefebvre2007compressed,strain1999fast}}. The octrees are not the same as ours (sparse voxel octrees do not resolve between objects; we do not resolve object features). We include a timing and memory comparison with Laine's algorithm in Figure \ref{fig:compare} to show that our octree building algorithm is at least on par with the current state of the art.}
-
-\red{We ran timing comparisons of our method with Laine's algorithm~\shortcite{laine2011efficient}, which is a sparse voxel octree (SVO) method \cite{baert2013out,bastos2008gpu,crassin2009gigavoxels,lefebvre2007compressed,strain1999fast}. Laine's algorithm (and other SVO methods) subdivide octree cells in areas of object complexity, whereas our algorithm subdivides in areas of inter-object proximity. In other words, previous methods model the objects, while our approach models the space between objects. Because the two methods compute different octrees, a direct timing comparison is not meaningful, so we compared the number of seconds required for each megabyte of octree. From Figure \ref{fig:compare} we see that the execution time of our algorithm is comparable to the state of the art SVO construction.}
-
-%While part of our algorithm implementation is on the GPU (wavefront initialization and portions of the octree computation), our primary goal is to show that GVD computation using commodity hardware is possible on challenging datasets.  Uniformly gridded approaches would require $2^{Dn}$ voxels, where $D$ is the dimension and $n$ is the number of octree levels needed to resolve objects.  Table \ref{tab:timings} shows timings on datasets that would require between $2^{24}$ and $2^{48}$ uniformly gridded voxels.
-
-%datasets where other approaches fail, rather than incremental performance improvements over previous work.  Table \ref{tab:timings} shows timings on datasets that state-of-the-art approaches fail to compute.  Uniform gridding schemes require $2^{dn}$ voxels where $d$ is the dimension and $n$ is the quadtree/octree depth.  Datasets reported in Table \ref{tab:timings} require between $2^{24}$ and $2^{48}$ uniformly gridded voxels.
-
-%Our algorithm is designed primarily for memory savings, but it is has fast execution times as well.  We report statistics and timings in table \ref{tab:timings} for many of the examples shown in the paper.
-
-% Memory usage:
-% Vertex: 29
-% Labeled point: 16
-% v2b etc: 8
-% total: 54
-% Multiply # octree vertices by 54
-
-% # octree vertices
-%  52K ./viewer3 -l 8 ~/data/gears/gear[1-3].obj
-% 170K ./viewer3 -l 12 ~/data/knife/knife-holder.obj ~/data/knife/knife[2-4].obj
-% 146K ./viewer2 -l 24 ../data2/filled_ut/*.dat
-% 2.8M ./viewer3 --uniform-colors -a 1 -l 8 ~/data/neuron/improved/a*.obj
-% 1.3M ./viewer3 -l 8 ~/data/rice-dwarf/decimated2/n1UF2a-*.obj
-
-% memory (54 bytes per octree cell)
-%  2.8Mb ./viewer3 -l 8 ~/data/gears/gear[1-3].obj
-%  9.2Mb ./viewer3 -l 12 ~/data/knife/knife-holder.obj ~/data/knife/knife[2-4].obj
-% 7.9Mb ./viewer2 -l 24 ../data2/filled_ut/*.dat
-% 151.2Mb ./viewer3 --uniform-colors -a 1 -l 8 ~/data/neuron/improved/a*.obj
-% 70.2Mb ./viewer3 -l 8 ~/data/rice-dwarf/decimated2/n1UF2a-*.obj
-
-\begin{table*}
-  \centering
-  \footnotesize{
-  \begin{tabular}{l c c c c c c c}
-    \toprule
-    dataset & objects & object          & octree   & octree          & octree &
-    GVD   & GVD             \\
-            &         & $\Delta$s       & depth    & cells           & memory &
-    (sec) & $\Delta$s       \\
-            &         & ($\times 10^3$) &          & ($\times 10^3$) & (Mb)   &
-          & ($\times 10^3$) \\
-    \midrule
-    % ./viewer3 -l 8 ~/data/gears/gear[1-3].obj
-    Fig. \ref{fig:gears} & 3 & 7 & 8 & 54 & 3 & 0.9 & 83\\
-    % ./viewer3 -l 12 ~/data/knife/knife-holder.obj ~/data/knife/knife[2-4].obj
-    Fig. \ref{fig:knife} & 4 & 15 & 12 & 146 & 9 & 3.9 & 232 \\
-    % ./viewer2 -l 24 ../data2/filled_ut/*.dat
-    Fig. \ref{fig:path} & 470 & 5 & 24 & 158 & 8 & 2.0 & 151 \\
-    % ./viewer3 --uniform-colors -a 1 -l 8 ~/data/neuron/improved/a*.obj
-    Fig. \ref{fig:axons} & 448 & 4015 & 8 & 2716 & 151 & 195 & 8100 \\
-    % ./viewer3 -l 8 ~/data/rice-dwarf/decimated2/n1UF2a-*.obj
-    Fig. \ref{fig:mol-explode} & 35 & 1500 & 8 & 496 & 70 & 19 & 2700 \\
-    \bottomrule
-  \end{tabular}}
-  \caption{Table of octree/GVD computation statistics and timings on datasets that are unmanageable using other methods. \red{Columns are: \emph{objects} - the number of objects in the dataset; \emph{object $\Delta$s} - the number of line segments (2D) or triangles (3D) of all objects in the dataset; \emph{octree depth} - required octree depth in order to resolve objects; \emph{octree cells} - total number of leaf octree cells; \emph{octree memory} - amount of memory used by the octree; \emph{GVD (sec)} - seconds to perform all steps of GVD computation; \emph{GVD $\Delta$s} - number of line segments (2D) or triangles (3D) in the GVD.}}
-  \label{tab:timings}
-\end{table*}
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=.99\columnwidth]{filler.png}
-  \caption{Comparison of our octree building to the sparse voxel octree method of Laine and Karras~\shortcite{laine2011efficient}.
-    We used four datasets, each at three octree levels and compared seconds per Mb of octree memory used.
-%    Our method is faster and uses less memory in almost every case.
-    Laine's algorithm was run on a Windows 7 desktop with 3.5 GHz processor, 16 GB memory, and NVIDIA GeForce GTX 660 graphics card.
-%  Our method is faster and uses less memory in almost every case, due to the fact that the sparse voxel octree method subdivides everywhere on the surface, whereas our approach only subdivides where object pair spacing is small.
-  }
-  \label{fig:compare}
-\end{figure}
-
-\begin{figure}[h]
-  \centering
-  \subfloat[][]{
-    \label{fig:bunny1}
-    \includegraphics[width=.31\columnwidth]{bunny-4.png}
-  }
-  \subfloat[][]{
-    \label{fig:bunny2}
-    \includegraphics[width=.31\columnwidth]{bunny-5.png}
-  }
-  \subfloat[][]{
-    \label{fig:bunny3}
-    \includegraphics[width=.31\columnwidth]{bunny-6.png}
-  }
-  \caption{The method pipeline in 3D.
-    \protect\subref{fig:bunny1} Four bunnies placed in proximity.
-    \protect\subref{fig:bunny2} The octree with appropriately-labeled vertices.
-    \protect\subref{fig:bunny3} The constructed GVD.
-  }
-  \label{fig:bunny}
-\end{figure}
-
-\begin{figure}[h]
-  \centering
-  \begin{tikzpicture}
-    \node[anchor=south west,inner sep=0] at (0,0) {
-      \begin{minipage}{0.3\columnwidth}
-        \includegraphics[trim=6cm 1cm 7cm 1cm, clip=true, height=3cm]
-                        {filler.png}
-      \end{minipage}
-      \begin{minipage}{0.3\columnwidth}
-        \includegraphics[trim=6cm 0cm 4cm 0cm, clip=true, height=3cm]
-                        {filler.png}
-      \end{minipage}
-      \hspace{0.5cm}
-      \begin{minipage}{0.3\columnwidth}
-        \includegraphics[trim=4cm 0cm 1cm 0cm, clip=true, width=1.9cm]
-                        {filler.png} \\
-                        \includegraphics[trim=4cm 2.8cm 4cm 2.4cm, clip=true, width=1.9cm]
-                                        {filler.png}
-      \end{minipage}
-    };
-    % top box
-    \draw[red,thick] (4.25,2.15) rectangle (4.7,2.65);
-    \draw[red] (4.25,2.65) -- (5.3,3.27);
-    \draw[red] (4.25,2.15) -- (5.3,1.55);
-    \draw[black] (5.3,1.55) rectangle (7.2,3.27);
-    % bottom box
-    \draw[red,thick] (2.9,1.8) rectangle (3.6,2.2);
-    \draw[red] (3.6,2.02) -- (5.3,1.5);
-    \draw[red] (2.9,1.8) -- (5.3,0.02);
-    \draw[black] (5.3,0.02) rectangle (7.2,1.5);
-%    % top box
-%    \draw[red,thick] (4.45,2.15) rectangle (4.9,2.65);
-%    \draw[red] (4.45,2.65) -- (5.82,3.27);
-%    \draw[red] (4.45,2.15) -- (5.82,1.55);
-%    \draw[black] (5.82,1.55) rectangle (7.72,3.27);
-%    % bottom box
-%    \draw[red,thick] (3.1,1.8) rectangle (3.8,2.2);
-%    \draw[red] (3.8,2.02) -- (5.82,1.5);
-%    \draw[red] (3.1,1.8) -- (5.82,0.02);
-%    \draw[black] (5.82,0.02) rectangle (7.72,1.5);
-
-%    \draw[black,thick] (0.6,1.8) -- (2.75,4.45);
-%    \draw[black,thick] (2.75,0.5) rectangle (8.25,4.47);
-  \end{tikzpicture}
-  \caption{A pipes dataset with 392 objects and 207K object triangles.  The octree was subdivided to level 10 for a total of 1.8m octree cells.  The GVD separates even the nuts from the bolts (upper right).
-  }
-  \label{fig:pipes}
-\end{figure}
-
-\begin{figure}[h]
-  \centering
-  \begin{tikzpicture}
-    \node[anchor=south west,inner sep=0] at (0,0) {
-      \subfloat[][]{
-        \label{fig:heart1}
-        \includegraphics[trim=9cm 0cm 6cm 0cm, clip=true, height=3cm]
-                        {filler.png} }
-      \subfloat[][]{
-        \label{fig:heart2}
-        \includegraphics[trim=0cm 1cm 0.5cm 0cm, clip=true, height=3cm]
-                        {filler.png} }
-    };
-    \draw[black,ultra thick] (0.5,0.9) rectangle (1.2,1.45);
-    \draw[black,thick] (0.5,0.9) -- (2.1,0.5);
-    \draw[black,thick] (0.5,1.45) -- (2.1,3.5);
-    \draw[black,thick] (2.1,0.5) rectangle (6.25,3.5);
-  \end{tikzpicture}
-  \caption{%\red{fix image}
-    Heart defibrillation dataset showing support for multiple connected components.
-    \protect\subref{fig:heart1} The blue and purple objects have multiple components.
-    \protect\subref{fig:heart2} The GVD naturally handles multiple components of an object.  Portions of the GVD are clipped away for visualization.
-  }
-  \label{fig:heart}
-\end{figure}
-
-\subsection{Path planning}
-\label{sec:path-planning}
-
-\red{Motion planning is an important application in robotics and other fields \cite{canny1988simplified,thrun1998learning,hoff2000interactive,vachhani2011mobile}. Roadmap methods of path finding \cite{masehian2007classic,raja2012optimal} retract the set of feasible movements to a lower-dimensional space, often using the Generalized Voronoi Diagram as the retraction. Once the GVD is available, a variety of methods can be used for computation of the final path, from simple graph searches \cite{hoff2000interactive,masehian2007classic} to fast marching \cite{garrido2006path}. As noted by Foskey et al \shortcite{foskey2001voronoi}, a shortcoming of this approach is the difficulty of computing the GVD.}
-
-\red{We have augmented our GVD algorithm with a simple path finding implementation that uses Dijkstra's graph search algorithm in order to show that path planning is possible on difficult datasets. On simple datasets, our method is not competitive with uniform grid approaches \cite{hoff2000interactive,foskey2001voronoi,garrido2006path}, but our algorithm is robust on datasets with closely spaced objects, which would cause uniform grid approaches to fail. One such dataset is shown in Figure \ref{fig:path}, where we computed the GVD for 470 2D objects with object spacings that vary widely. Computation took 2.0 seconds with the quadtree reaching level 24 and 140,680 cells (a uniform grid would require $2^{48}$ pixels to resolve the closest object spacings). Our GVD algorithm could be coupled with a more sophisticated path search algorithm, such as the method proposed by Garrido et al \shortcite{garrido2006path}, for improved paths.}
-
-\begin{figure*}
-  \centering
-  \includegraphics[width=0.8\textwidth]{filler.png}
-  \caption{Path planning in 2D.  We built a quadtree over hundreds of objects ranging in size and spacing over orders of magnitude.  The quadtree reached level 24 before the closest spacings were resolved.  The shortest-cost path between two points is shown in blue.  The rightmost figure shows the quadtree in gray and GVD boundary complex in red at 80,000x magnification.}
-  \label{fig:path}
-\end{figure*}
-
-\subsection{Proximity queries}
-\label{sec:proximity}
-
-\subsection{Exploded diagrams}
 
 %-------------------------------------------------------------------------------
 % Conclusions
 %-------------------------------------------------------------------------------
 \section{Conclusions}
-We have presented and demonstrated the effectiveness of a novel generalized Voronoi diagram algorithm, which includes an octree subdivision algorithm, octree data structure, distance transform, and GVD surfacing algorithm.  We have also shown, in addition to the popular motion path planning, important applications of the GVD.  Our method opens the door to investigation of other applications that might benefit from a GVD algorithm specifically tailored to collections of objects that are closely spaced.
-
-Our algorithm is general; our implementation supports \red{polygons and} triangulated objects, but the algorithm supports curved objects equally as well.  Our approach is particularly suited to objects for which a point-object distance computation is expensive since initialization of the wavefront is the only step that requires the point-object distance operation.
-
-With the proven usefulness of the ordinary Voronoi diagram and the growing uses of the generalized Voronoi diagram, the algorithm presented in this paper fills a need for a practical GVD algorithm that supports previously unmanageable datasets -- those with tightly packed objects.  Interestingly, it is often applications using these very datasets that are in greatest need of the GVD.  For example, traditional path-planning is straightforward unless the objects are tightly packed; finding regions of close tolerance is unnecessary unless close tolerances, in fact, exist.  These applications and others can now be more fully explored with the availability of our adaptive GVD algorithm.
 
 %-------------------------------------------------------------------------------
 % Acknowledgements
 %-------------------------------------------------------------------------------
 \section*{Acknowledgements}
-Thanks to Kristen Harris for use of the neuronal data and Jonathan Bronson for the heart data. The work of JE and VP was supported in part by NSF IIS-1314896, NSF ACI-0904631, DOE/NEUP 120341, DOE/UV-CDAT DESC0006872, DOE/Codesign P01180734, DOE/SciDAC DESC0007446, DOE/PIPER DESC0010498, and DOE/CCMSC DENA0002375. This work initiated at the University of Texas when JE, ED  and CB were supported in part by NIH contract R01-EB00487, NSF Grant OCI-1216701 and SNL contract 1439100.
+%Thanks to Kristen Harris for use of the neuronal data and Jonathan Bronson for the heart data. The work of JE and VP was supported in part by NSF IIS-1314896, NSF ACI-0904631, DOE/NEUP 120341, DOE/UV-CDAT DESC0006872, DOE/Codesign P01180734, DOE/SciDAC DESC0007446, DOE/PIPER DESC0010498, and DOE/CCMSC DENA0002375. This work initiated at the University of Texas when JE, ED  and CB were supported in part by NIH contract R01-EB00487, NSF Grant OCI-1216701 and SNL contract 1439100.
 
 %-------------------------------------------------------------------------
 % Bibliography
 %-------------------------------------------------------------------------
 
 %\bibliographystyle{eg-alpha}
-\bibliographystyle{eg-alpha-doi}
-\balance
-\bibliography{paper}
+%\bibliographystyle{eg-alpha-doi}
+%\balance
+%\bibliography{paper}
 
 \end{document}
