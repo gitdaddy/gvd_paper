@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.24)  6 NOV 2018 16:35
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.24)  9 NOV 2018 16:10
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -952,116 +952,131 @@ Underfull \hbox (badness 10000) in paragraph at lines 157--159
  []
 
 
-LaTeX Warning: Reference `fig:visible-vertices' on page 1 undefined on input li
-ne 274.
+LaTeX Warning: Reference `fig:wavefront6' on page 1 undefined on input line 279
+.
+
+
+LaTeX Warning: Reference `fig:wavefront2' on page 1 undefined on input line 279
+.
 
 
 LaTeX Warning: Reference `fig:visible-vertices' on page 1 undefined on input li
-ne 274.
+ne 279.
 
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 275.
+
+LaTeX Warning: Reference `fig:visible-vertices' on page 1 undefined on input li
+ne 279.
+
+
+LaTeX Warning: Reference `fig:visible-vertices' on page 1 undefined on input li
+ne 281.
+
+<./figs/fig1_a.png, id=8, 503.8825pt x 499.8675pt>
+File: ./figs/fig1_a.png Graphic file (type png)
+<use ./figs/fig1_a.png>
+Package pdftex.def Info: ./figs/fig1_a.png  used on input line 288.
+(pdftex.def)             Requested size: 69.12158pt x 68.5699pt.
+<./figs/fig1_b.png, id=10, 504.88625pt x 501.875pt>
+File: ./figs/fig1_b.png Graphic file (type png)
+<use ./figs/fig1_b.png>
+Package pdftex.def Info: ./figs/fig1_b.png  used on input line 291.
+(pdftex.def)             Requested size: 69.12158pt x 68.70744pt.
+<./figs/fig1_c.png, id=11, 500.87125pt x 498.86375pt>
+File: ./figs/fig1_c.png Graphic file (type png)
+<use ./figs/fig1_c.png>
+Package pdftex.def Info: ./figs/fig1_c.png  used on input line 294.
+(pdftex.def)             Requested size: 69.12158pt x 68.84326pt.
+
+Overfull \hbox (4.86475pt too wide) in paragraph at lines 288--294
+ [][][][][][] 
+ []
+
+<./figs/fig1_d.png, id=12, 487.8225pt x 527.9725pt>
+File: ./figs/fig1_d.png Graphic file (type png)
+<use ./figs/fig1_d.png>
+Package pdftex.def Info: ./figs/fig1_d.png  used on input line 297.
+(pdftex.def)             Requested size: 69.12158pt x 74.80988pt.
+<./figs/fig1_e.png, id=13, 457.71pt x 532.99126pt>
+File: ./figs/fig1_e.png Graphic file (type png)
+<use ./figs/fig1_e.png>
+Package pdftex.def Info: ./figs/fig1_e.png  used on input line 300.
+(pdftex.def)             Requested size: 69.12158pt x 80.49013pt.
+<./figs/fig1_f.png, id=14, 447.6725pt x 529.98pt>
+File: ./figs/fig1_f.png Graphic file (type png)
+<use ./figs/fig1_f.png>
+Package pdftex.def Info: ./figs/fig1_f.png  used on input line 303.
+(pdftex.def)             Requested size: 69.12158pt x 81.83066pt.
+
+Overfull \hbox (4.86475pt too wide) in paragraph at lines 297--311
+ [][][][][][] 
+ []
+
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 313.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <6> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 275.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 313.
  [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
 
 ]
 
-LaTeX Warning: Reference `fig:visible-vertices' on page 2 undefined on input li
-ne 276.
+LaTeX Warning: Reference `fig:2d-4' on page 2 undefined on input line 324.
 
-<./figs/filler.png, id=34, 593.21625pt x 594.22pt>
+<./figs/filler.png, id=51, 593.21625pt x 594.22pt>
 File: ./figs/filler.png Graphic file (type png)
 <use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 283.
-(pdftex.def)             Requested size: 69.12158pt x 69.23602pt.
-File: ./figs/filler.png Graphic file (type png)
-<use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 286.
-(pdftex.def)             Requested size: 69.12158pt x 69.23602pt.
-File: ./figs/filler.png Graphic file (type png)
-<use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 289.
-(pdftex.def)             Requested size: 69.12158pt x 69.23602pt.
-
-Overfull \hbox (4.86475pt too wide) in paragraph at lines 283--289
- [][][][][][] 
- []
-
-File: ./figs/filler.png Graphic file (type png)
-<use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 292.
-(pdftex.def)             Requested size: 69.12158pt x 69.23602pt.
-File: ./figs/filler.png Graphic file (type png)
-<use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 295.
-(pdftex.def)             Requested size: 69.12158pt x 69.23602pt.
-File: ./figs/filler.png Graphic file (type png)
-<use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 298.
-(pdftex.def)             Requested size: 69.12158pt x 69.23602pt.
-
-Overfull \hbox (4.86475pt too wide) in paragraph at lines 292--306
- [][][][][][] 
- []
-
-
-LaTeX Warning: Reference `fig:2d-4' on page 2 undefined on input line 319.
-
-File: ./figs/filler.png Graphic file (type png)
-<use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 353.
+Package pdftex.def Info: ./figs/filler.png  used on input line 358.
 (pdftex.def)             Requested size: 34.56079pt x 34.61801pt.
 File: ./figs/filler.png Graphic file (type png)
 <use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 353.
+Package pdftex.def Info: ./figs/filler.png  used on input line 358.
 (pdftex.def)             Requested size: 34.56079pt x 34.61801pt.
 File: ./figs/filler.png Graphic file (type png)
 <use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 353.
+Package pdftex.def Info: ./figs/filler.png  used on input line 358.
 (pdftex.def)             Requested size: 34.56079pt x 34.61801pt.
 File: ./figs/filler.png Graphic file (type png)
 <use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 361.
+Package pdftex.def Info: ./figs/filler.png  used on input line 366.
 (pdftex.def)             Requested size: 34.56079pt x 34.61801pt.
 File: ./figs/filler.png Graphic file (type png)
 <use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 361.
+Package pdftex.def Info: ./figs/filler.png  used on input line 366.
 (pdftex.def)             Requested size: 34.56079pt x 34.61801pt.
 File: ./figs/filler.png Graphic file (type png)
 <use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 382.
+Package pdftex.def Info: ./figs/filler.png  used on input line 387.
 (pdftex.def)             Requested size: 64.80066pt x 64.90198pt.
 File: ./figs/filler.png Graphic file (type png)
 <use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 390.
+Package pdftex.def Info: ./figs/filler.png  used on input line 395.
 (pdftex.def)             Requested size: 64.80066pt x 64.90198pt.
-[2 <./figs/filler.png (PNG copy)>]
+[2 <./figs/fig1_a.png> <./figs/fig1_b.png> <./figs/fig1_c.png> <./figs/fig1_d.p
+ng> <./figs/fig1_e.png> <./figs/fig1_f.png>]
 File: ./figs/filler.png Graphic file (type png)
 <use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 416.
+Package pdftex.def Info: ./figs/filler.png  used on input line 421.
 (pdftex.def)             Requested size: 108.0pt x 108.17903pt.
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <9> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 436.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 441.
 File: ./figs/filler.png Graphic file (type png)
 <use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 444.
+Package pdftex.def Info: ./figs/filler.png  used on input line 449.
 (pdftex.def)             Requested size: 86.39868pt x 86.54504pt.
 File: ./figs/filler.png Graphic file (type png)
 <use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 447.
+Package pdftex.def Info: ./figs/filler.png  used on input line 452.
 (pdftex.def)             Requested size: 86.39868pt x 86.54504pt.
 
 
 LaTeX Warning: Footnotes are not permitted in CGF articles -- please remove on 
-input line 459.
+input line 464.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 459--459
+Underfull \hbox (badness 10000) in paragraph at lines 464--464
 $[]$ [][]\T1/ptm/m/n/8 Source code is avail-able at [][]$\T1/pcr/m/n/8 http : /
  / cedmav . org /
  []
@@ -1071,128 +1086,119 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 []
  []
 
-[3]
+[3 <./figs/filler.png (PNG copy)>]
 
-LaTeX Warning: Reference `fig:2d-6' on page 4 undefined on input line 465.
+LaTeX Warning: Reference `fig:2d-6' on page 4 undefined on input line 470.
 
 
-LaTeX Warning: Reference `fig:2d-7' on page 4 undefined on input line 465.
+LaTeX Warning: Reference `fig:2d-7' on page 4 undefined on input line 470.
 
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <8> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 511.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 516.
 
-LaTeX Warning: Reference `fig:gears' on page 4 undefined on input line 511.
-
-
-LaTeX Warning: Reference `fig:knife' on page 4 undefined on input line 513.
+LaTeX Warning: Reference `fig:gears' on page 4 undefined on input line 516.
 
 
-LaTeX Warning: Reference `fig:axons' on page 4 undefined on input line 517.
+LaTeX Warning: Reference `fig:knife' on page 4 undefined on input line 518.
 
 
-LaTeX Warning: Reference `fig:mol-explode' on page 4 undefined on input line 51
-9.
+LaTeX Warning: Reference `fig:axons' on page 4 undefined on input line 522.
+
+
+LaTeX Warning: Reference `fig:mol-explode' on page 4 undefined on input line 52
+4.
 
 File: ./figs/filler.png Graphic file (type png)
 <use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 528.
+Package pdftex.def Info: ./figs/filler.png  used on input line 533.
 (pdftex.def)             Requested size: 213.84119pt x 214.20012pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<./figs/bunny-4.png, id=143, 593.21625pt x 594.22pt>
+<./figs/bunny-4.png, id=153, 593.21625pt x 594.22pt>
 File: ./figs/bunny-4.png Graphic file (type png)
 <use ./figs/bunny-4.png>
-Package pdftex.def Info: ./figs/bunny-4.png  used on input line 543.
+Package pdftex.def Info: ./figs/bunny-4.png  used on input line 548.
 (pdftex.def)             Requested size: 66.95947pt x 67.069pt.
-<./figs/bunny-5.png, id=144, 593.21625pt x 594.22pt>
+<./figs/bunny-5.png, id=154, 593.21625pt x 594.22pt>
 File: ./figs/bunny-5.png Graphic file (type png)
 <use ./figs/bunny-5.png>
-Package pdftex.def Info: ./figs/bunny-5.png  used on input line 547.
+Package pdftex.def Info: ./figs/bunny-5.png  used on input line 552.
 (pdftex.def)             Requested size: 66.95947pt x 67.069pt.
-<./figs/bunny-6.png, id=145, 593.21625pt x 594.22pt>
+<./figs/bunny-6.png, id=155, 593.21625pt x 594.22pt>
 File: ./figs/bunny-6.png Graphic file (type png)
 <use ./figs/bunny-6.png>
-Package pdftex.def Info: ./figs/bunny-6.png  used on input line 551.
+Package pdftex.def Info: ./figs/bunny-6.png  used on input line 556.
 (pdftex.def)             Requested size: 66.95947pt x 67.069pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 File: ./figs/filler.png Graphic file (type png)
 <use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 566.
+Package pdftex.def Info: ./figs/filler.png  used on input line 571.
 (pdftex.def)             Requested size: 35.47801pt x 85.35826pt.
 File: ./figs/filler.png Graphic file (type png)
 <use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 570.
+Package pdftex.def Info: ./figs/filler.png  used on input line 575.
 (pdftex.def)             Requested size: 44.34186pt x 85.35826pt.
 File: ./figs/filler.png Graphic file (type png)
 <use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 575.
+Package pdftex.def Info: ./figs/filler.png  used on input line 580.
 (pdftex.def)             Requested size: 54.06006pt x 71.23077pt.
 File: ./figs/filler.png Graphic file (type png)
 <use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 577.
+Package pdftex.def Info: ./figs/filler.png  used on input line 582.
 (pdftex.def)             Requested size: 54.06006pt x 65.98366pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 File: ./figs/filler.png Graphic file (type png)
 <use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 616.
+Package pdftex.def Info: ./figs/filler.png  used on input line 621.
 (pdftex.def)             Requested size: 23.90625pt x 85.35826pt.
 File: ./figs/filler.png Graphic file (type png)
 <use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 620.
+Package pdftex.def Info: ./figs/filler.png  used on input line 625.
 (pdftex.def)             Requested size: 87.34831pt x 85.35826pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
+[4 <./figs/bunny-4.png (PNG copy)> <./figs/bunny-5.png (PNG copy)> <./figs/bunn
+y-6.png (PNG copy)>]
 File: ./figs/filler.png Graphic file (type png)
 <use ./figs/filler.png>
-Package pdftex.def Info: ./figs/filler.png  used on input line 644.
+Package pdftex.def Info: ./figs/filler.png  used on input line 649.
 (pdftex.def)             Requested size: 364.80139pt x 365.42953pt.
-
-Underfull \vbox (badness 2573) has occurred while \output is active []
-
- [4 <./figs/bunny-4.png (PNG copy)> <./figs/bunny-5.png (PNG copy)> <./figs/bun
-ny-6.png (PNG copy)>]
-Underfull \hbox (badness 10000) in paragraph at lines 668--669
-\T1/ptm/m/n/9 NSF ACI-0904631, DOE/NEUP 120341, DOE/UV-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 668--669
-\T1/ptm/m/n/9 CDAT DESC0006872, DOE/Codesign P01180734,
- []
-
-
-Underfull \hbox (badness 1715) in paragraph at lines 668--669
-\T1/ptm/m/n/9 and DOE/CCMSC DENA0002375. This work ini-ti-ated
- []
-
 
 Underfull \hbox (badness 10000) has occurred while \output is active
 []
  []
 
-[5] (./paper.bbl (./paper.brf)
+[5]
+Underfull \hbox (badness 10000) in paragraph at lines 673--674
+\T1/ptm/m/n/9 NSF ACI-0904631, DOE/NEUP 120341, DOE/UV-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 673--674
+\T1/ptm/m/n/9 CDAT DESC0006872, DOE/Codesign P01180734,
+ []
+
+
+Underfull \hbox (badness 1715) in paragraph at lines 673--674
+\T1/ptm/m/n/9 and DOE/CCMSC DENA0002375. This work ini-ti-ated
+ []
+
+(./paper.bbl (./paper.brf)
 \tf@brf=\write4
 \openout4 = `paper.brf'.
 
-
+ [6]
 Underfull \hbox (badness 1231) in paragraph at lines 44--44
 []\T1/ptm/m/sc/8 Boissonnat J.-D., Wormser C., Yvinec M.\T1/ptm/m/n/8 :
  []
 
 
-Overfull \vbox (0.79047pt too high) has occurred while \output is active []
-
-
-Overfull \vbox (2.78807pt too high) has occurred while \output is active []
-
-
-[6]
 Underfull \hbox (badness 2875) in paragraph at lines 103--103
 []\T1/ptm/m/sc/8 Gargantini I.\T1/ptm/m/n/8 :  An ef-fec-tive way to rep-re-sen
 t
@@ -1226,40 +1232,41 @@ ro-ceed-ings
  []
 
 
-Underfull \hbox (badness 2689) in paragraph at lines 246--246
-[]\T1/ptm/m/sc/8 Qu H., Zhang N., Shao R., Kauf-man A.,
- []
-
-
-Overfull \vbox (7.35803pt too high) has occurred while \output is active []
-
-
 Underfull \hbox (badness 10000) has occurred while \output is active
 []
  []
 
-[7]) [8]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 679.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 679.
+[7]
+Underfull \hbox (badness 2689) in paragraph at lines 246--246
+[]\T1/ptm/m/sc/8 Qu H., Zhang N., Shao R., Kauf-man A.,
+ []
+
+)
+Overfull \vbox (0.98196pt too high) has occurred while \output is active []
+
+
+[8]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 684.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 684.
  (./paper.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 679.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 679.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 684.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 684.
 Package rerunfilecheck Info: File `paper.brf' has not changed.
-(rerunfilecheck)             Checksum: 40F0C08FBD38DE33B62E52180B1C3329;1191.
+(rerunfilecheck)             Checksum: 31A115BB900EAC83A7951E49AD234002;1191.
 
 
 LaTeX Warning: There were undefined references.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 679.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 684.
  ) 
 Here is how much of TeX's memory you used:
- 20527 strings out of 494847
- 368174 string characters out of 6179079
- 485259 words of memory out of 5000000
- 23309 multiletter control sequences out of 15000+600000
+ 20559 strings out of 494847
+ 368732 string characters out of 6179079
+ 473925 words of memory out of 5000000
+ 23335 multiletter control sequences out of 15000+600000
  64958 words of font info for 111 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
- 57i,16n,56p,2160b,832s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 57i,25n,56p,2160b,832s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/
@@ -1272,10 +1279,10 @@ share/texlive/texmf-dist/fonts/type1/urw/symbol/usyr.pfb></usr/share/texlive/te
 xmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/
 type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times
 /utmri8a.pfb>
-Output written on paper.pdf (8 pages, 1141976 bytes).
+Output written on paper.pdf (8 pages, 1207379 bytes).
 PDF statistics:
- 365 PDF objects out of 1000 (max. 8388607)
- 307 compressed objects within 4 object streams
+ 375 PDF objects out of 1000 (max. 8388607)
+ 306 compressed objects within 4 object streams
  111 named destinations out of 1000 (max. 500000)
- 69 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 99 words of extra memory for PDF output out of 10000 (max. 10000000)
 

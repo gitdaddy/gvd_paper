@@ -235,35 +235,40 @@ Place related work here
   \KwIn{events}
   \BlankLine
   \tcp{Initialization}
-  $beachline$ := the line equidistant between the event and the event\;
-  $closeEventPoints$ := the set of all close \;
-  \While{events > 0 and exists events in sweepline path}{
-  	let $e$ := the next event\;
-    \If{$e$ is close event}{
+  $beachline$ := the set of arc nodes\;
+  $closeEventPoints$ := the set of all close events\;
+  $events$ := a list of sorted points or sites\;
+  \While{$events$ > 0}{
+  	let $e$ := the next event in $events$\;
+  	move the sweepline to include point $e$\;
+    
+    \If{$e$ is a close event}{
     	\If{$e$ is live}{
-    	  update arch node points\;
-    	  remove $e.archNode$ from the $beachline$\;
-% 		  \ForEach{$ev$ in events}{
-% 		  	\If{$ev.y$ less than $e.y$ - \varepsilon}{
-% 		  		add $ev$ to events\;
-% 		  		\If{$ev$ is close event}{
-% 		  			add $ev$ to $closeEventPoints$\;
-% 		  		}
-% 		  	}
-% 		  }
+    	  update the associated arc node to close on point $e$\;
+    	  remove the arc node from the $beachline$ and return $newEvents$\;
+    	  
+    	  \ForEach{$ev$ in $newEvents$}{
+    	  	\If {$ev$ is below $e$}{
+    	  		add $ev$ to $events$\;
+    	  		\If{$ev$ is a close event}{
+    	  			add $ev$ to $closeEventPoints$
+    	  		}
+    	  	}
+    	  }
+    	  
 		}
    	}
     \Else{
    	  \tcp{Site event}
-   	  add $e$ to the $beachline$
-%   	  \ForEach{$ev$ in events}{
-%   	  	\If{$ev.y$ less than $e.y$ - \varepsilon}{
-%   	  		add $ev$ to events
-%   	  		 \If{$ev$ is close event}{
-%   	  		 	add $ev$ to $closeEventPoints$
-%   	  		 }
-%   	  	}
-%   	  }
+   	  add $e$ to the $beachline$ and return $newEvents$
+   	   \ForEach{$ev$ in $newEvents$}{
+   	  	\If {$ev$ is below $e$}{
+   	  		add $ev$ to $events$\;
+   	  		\If{$ev$ is a close event}{
+   	  			add $ev$ to $closeEventPoints$
+   	  		}
+   	  	}
+   	  }
     }
   }
 \caption{COMPUTE\_DISTANCES}
@@ -279,30 +284,30 @@ The number of vertices that are visible from $v$ is dependent on gradation.  Let
 \begin{figure}
   \centering
   \subfloat[][]{
-    \label{fig:wavefront5}
-    \includegraphics[width=0.32\columnwidth]{filler.png} }
+    \label{fig:sweepA}
+    \includegraphics[width=0.32\columnwidth]{fig1_a.png} }
   \subfloat[][]{
-    \label{fig:wavefront6}
-    \includegraphics[width=0.32\columnwidth]{filler.png} }
+    \label{fig:sweepB}
+    \includegraphics[width=0.32\columnwidth]{fig1_b.png} }
   \subfloat[][]{
-    \label{fig:wavefront7}
-    \includegraphics[width=0.32\columnwidth]{filler.png} } \\
+    \label{fig:sweepC}
+    \includegraphics[width=0.32\columnwidth]{fig1_c.png} } \\
   \subfloat[][]{
-    \label{fig:wavefront2}
-    \includegraphics[width=0.32\columnwidth]{filler.png} }
+    \label{fig:sweepD}
+    \includegraphics[width=0.32\columnwidth]{fig1_d.png} }
   \subfloat[][]{
-    \label{fig:wavefront4}
-    \includegraphics[width=0.32\columnwidth]{filler.png} }
+    \label{fig:sweepE}
+    \includegraphics[width=0.32\columnwidth]{fig1_e.png} }
   \subfloat[][]{
-    \label{fig:wavefront6-gvd}
-    \includegraphics[width=0.32\columnwidth]{filler.png} }
-  \caption{Wavefront expansion.
-    \protect\subref{fig:wavefront5} Portions of the surfaces of two objects. Assign every nonempty vertex an exact closest point and add the vertex to the wavefront priority queue.
-    \protect\subref{fig:wavefront6} Pop the top priority vertex (dotted circle) and push its closest point to its neighbors (circle).
-    \protect\subref{fig:wavefront7} Next iteration.
-    \protect\subref{fig:wavefront2} Initialized wavefront (as in \protect\subref{fig:wavefront6}).
-    \protect\subref{fig:wavefront4} Expanded wavefront.  Green lines connect quadtree vertices to computed closest points.
-    \protect\subref{fig:wavefront6-gvd} The GVD is shown in red.
+    \label{fig:sweepF}
+    \includegraphics[width=0.32\columnwidth]{fig1_f.png} }
+  \caption{Sweepline Algorithm
+    \protect\subref{fig:sweepA} Place Explanation Here
+    \protect\subref{fig:sweepB} Place Explanation Here
+    \protect\subref{fig:sweepC} Place Explanation Here
+    \protect\subref{fig:sweepD}  %(as in \protect\subref{fig:wavefront6}).
+    \protect\subref{fig:sweepE} Place Explanation Here
+    \protect\subref{fig:sweepF} Place Explanation Here
   }
   \label{fig:wavefront}
 \end{figure}
