@@ -1,11 +1,11 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.13)  14 NOV 2018 14:56
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.24)  20 NOV 2018 08:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **paper.tex
 (./paper.tex
 LaTeX2e <2017-04-15>
-Babel <3.18> and hyphenation patterns for 84 language(s) loaded.
+Babel <3.18> and hyphenation patterns for 7 language(s) loaded.
 (./egpubl.cls
 Document Class: egpubl 2013/11/28 Document Style for EG Publications v3.57
 \c@table=\count79
@@ -822,11 +822,7 @@ Package: ulem 2012/05/18
 \c@crit=\count160
 \c@condition=\count161
 \c@fact=\count162
-) (./paper.aux
-
-LaTeX Warning: Label `fig:wavefront' multiply defined.
-
-)
+) (./paper.aux)
 \openout1 = `paper.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 102.
@@ -846,7 +842,8 @@ LaTeX Font Info:    ... okay on input line 102.
 LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 102.
 LaTeX Font Info:    Try loading font information for TS1+cmr on input line 102.
 
- (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd
+
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    ... okay on input line 102.
@@ -1024,14 +1021,44 @@ Overfull \hbox (17.64185pt too wide) in paragraph at lines 297--304
  [][][][] 
  []
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 335.
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 335.
+<./figs/fig3_a.png, id=34, 502.87875pt x 304.13625pt>
+File: ./figs/fig3_a.png Graphic file (type png)
+<use ./figs/fig3_a.png>
+Package pdftex.def Info: ./figs/fig3_a.png  used on input line 312.
+(pdftex.def)             Requested size: 112.32092pt x 67.9265pt.
+<./figs/fig3_b.png, id=35, 501.875pt x 313.17pt>
+File: ./figs/fig3_b.png Graphic file (type png)
+<use ./figs/fig3_b.png>
+Package pdftex.def Info: ./figs/fig3_b.png  used on input line 315.
+(pdftex.def)             Requested size: 112.32092pt x 70.08746pt.
+
+Overfull \hbox (17.64185pt too wide) in paragraph at lines 312--315
+ [][][][] 
+ []
+
+<./figs/fig3_c.png, id=36, 432.61626pt x 528.97626pt>
+File: ./figs/fig3_c.png Graphic file (type png)
+<use ./figs/fig3_c.png>
+Package pdftex.def Info: ./figs/fig3_c.png  used on input line 318.
+(pdftex.def)             Requested size: 112.32092pt x 137.33685pt.
+<./figs/fig3_d.png, id=37, 414.54875pt x 523.9575pt>
+File: ./figs/fig3_d.png Graphic file (type png)
+<use ./figs/fig3_d.png>
+Package pdftex.def Info: ./figs/fig3_d.png  used on input line 321.
+(pdftex.def)             Requested size: 112.32092pt x 141.9581pt.
+
+Overfull \hbox (17.64185pt too wide) in paragraph at lines 318--325
+ [][][][] 
+ []
+
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 356.
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 356.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <6> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 335.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 356.
  [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
 
@@ -1042,37 +1069,32 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 []
  []
 
-[3
-
- <./figs/fig2_a.png> <./figs/fig2_b.png> <./figs/fig2_c.png> <./figs/fig2_d.png
->]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 335.
+[3 <./figs/fig2_a.png> <./figs/fig2_b.png> <./figs/fig2_c.png> <./figs/fig2_d.p
+ng> <./figs/fig3_a.png> <./figs/fig3_b.png> <./figs/fig3_c.png> <./figs/fig3_d.
+png>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 356.
  (./paper.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 335.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 335.
-
-
-LaTeX Warning: There were multiply-defined labels.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 335.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 356.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 356.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 356.
  ) 
 Here is how much of TeX's memory you used:
- 20131 strings out of 492982
- 360572 string characters out of 6134895
- 455867 words of memory out of 5000000
- 23259 multiletter control sequences out of 15000+600000
+ 20166 strings out of 494847
+ 361223 string characters out of 6179079
+ 456118 words of memory out of 5000000
+ 23044 multiletter control sequences out of 15000+600000
  46147 words of font info for 89 fonts, out of 8000000 for 9000
- 1141 hyphenation exceptions out of 8191
+ 59 hyphenation exceptions out of 8191
  57i,25n,54p,1092b,525s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf
 -dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/t
 ype1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/
 utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on paper.pdf (3 pages, 201937 bytes).
+Output written on paper.pdf (3 pages, 266251 bytes).
 PDF statistics:
- 106 PDF objects out of 1000 (max. 8388607)
- 67 compressed objects within 1 object stream
- 24 named destinations out of 1000 (max. 500000)
- 63 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 124 PDF objects out of 1000 (max. 8388607)
+ 75 compressed objects within 1 object stream
+ 29 named destinations out of 1000 (max. 500000)
+ 83 words of extra memory for PDF output out of 10000 (max. 10000000)
 
