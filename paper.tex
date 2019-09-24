@@ -46,6 +46,7 @@
 \usepackage{egweblnk}
 \usepackage{cite}
 \usepackage{balance}
+\usepackage{multicol}
 
 % For backwards compatibility to old LaTeX type font selection.
 % Uncomment if your document adheres to LaTeX2e recommendations.
@@ -100,7 +101,9 @@
 
 %-------------------------------------------------------------------------
 \begin{document}
-
+%\begin{multicols}{3}
+%\end{multicols}
+	
 %\teaser{
 %  \subfloat[][]{
 %    \label{fig:gears1}
@@ -155,7 +158,7 @@
 \maketitle
 
 \begin{abstract}
-Place abstract Here \\
+We introduce a geometric algorithm that allows the Generalized Voronoi Diagram to be created using a sweepline. In this generalized version the algorithm accepts input that includes any non-overlapping simple polygons including lines and points. From the input, the algorithm uses the sweepline approach to produce the Voronoi Diagram with $O(n logn)$ worst-case run-time. 
 
 %   Leave one blank line after the abstract, 
 %   then add the subject categories according to the ACM Classification Index 
@@ -336,7 +339,19 @@ Place related work here
 		\label{fig:gvd1}
 		\includegraphics[width=0.5\columnwidth]{gvd_1.png} }
 	\caption{Generalized Sites
-		\protect\subref{fig:gvd1} The exact Generaized Voronoi Diagram(GVD) is produced as sweep-line processes generalized sites. The software supports simple polygons made up of generalized sites. As a by product of generating the GVD we also get the medial axis of polygon..
+		\protect\subref{fig:gvd1} The exact Generalized Voronoi Diagram(GVD) is produced as sweep-line processes generalized sites. The algorithm supports any number of simple polygons as long as they are not overlapping. Each polygon is made up of a number of connected points. The GVD algorithm computes the appropriate bisector between sites. The bisector represents the continuous parabola or line that separates sites. If a point lies at the end of a segment the bisector is a line perpendicular to the segment intersecting that point; otherwise, the bisector between a point site and a segment site is a parabola representing the bisector of the two sites. With a pair of segments their bisector can include up to 2 lines if the intersection of the two segments lies between the endpoints of one segment. In all other cases the bisector of two segments can be represented with a single line.
+	}
+	\label{fig:gvd}
+\end{figure}
+
+
+\begin{figure}
+	\centering
+	\subfloat[][]{
+		\label{fig:gvd2}
+		\includegraphics[width=0.5\columnwidth]{gvd_2.png} }
+	\caption{Special Cases
+		\protect\subref{fig:gvd2} Special cases such as parallel sites are handled as the algorithm computes the correct bisector between each site. Between a pair of segments we use their intersection to find the bisector, however, when the segments are parallel there is no intersection and we use the average of the segments to determine the bisector. Finding the correct bisector enables the algorithm to determine future close events. 
 	}
 	\label{fig:gvd}
 \end{figure}
