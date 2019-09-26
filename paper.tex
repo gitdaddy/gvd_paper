@@ -47,6 +47,7 @@
 \usepackage{cite}
 \usepackage{balance}
 \usepackage{multicol}
+%\usepackage[backend=bibtex,style=verbose-trad2]{biblatex}
 
 % For backwards compatibility to old LaTeX type font selection.
 % Uncomment if your document adheres to LaTeX2e recommendations.
@@ -158,7 +159,7 @@
 \maketitle
 
 \begin{abstract}
-We introduce a geometric algorithm that allows the Generalized Voronoi Diagram to be created using a sweepline. In this generalized version the algorithm accepts input that includes any non-overlapping simple polygons including lines and points. From the input, the algorithm uses the sweepline approach to produce the Voronoi Diagram with $O(n logn)$ worst-case run-time. 
+We introduce a geometric algorithm that allows the generalized Voronoi diagram to be created using a sweepline method. In this generalized version the algorithm accepts 2-dimensional input including any non-overlapping simple polygons composed of lines and points. With the sweepline approach the Voronoi diagram can be created from the input with $O(n logn)$ worst-case run-time with $0(n)$ space requirements. 
 
 %   Leave one blank line after the abstract, 
 %   then add the subject categories according to the ACM Classification Index 
@@ -180,7 +181,12 @@ We introduce a geometric algorithm that allows the Generalized Voronoi Diagram t
 \section{Introduction}
 \label{sec:intro}
 
-Place introduction here
+Voronoi diagrams have been used for over three centuries dating back to 1644. One well known event happened in 1850 when a British physician named John Snow used them to illustrate that the majority of people who died from the Broad Street cholera outbreak where those who lived closer to a single infected water source opposed to other water sources. The generalized Voronoi diagram allow for the illustration of more complex objects by dividing space into individual Voronoi regions or cells. Each cell represents an area where every point is closer to a single site than any other site. These cells help to perceive properties about the data such as areas of influence, boundary lines or shortest site distances. 	
+
+In this area of geometric computation there are a number of algorithms published that provide a way to produce the Voronoi diagram. Producing the GVD is a more complex problem and difficult to compute within a reasonable amount of time. Most approaches compute an approximation to the exact GVD. 
+
+We introduce an algorithm that computes the exact GVD without large amounts of space requirements for the data. This algorithm can operate on an arbitrary data containing simple polygons. 
+
 
 %\paragraph{Main contributions} In computation of a GVD, we are less concerned with details of objects; rather, we adapt subdivision to most efficiently compute a distance field for GVD computation.  Our main contributions are fourfold.\footnote{Our algorithms support both 2D and 3D. For simplicity, we will use 3D terms (e.g. octree rather than quadtree) when discussing dimension-independent concepts, but will revert to 2D terms when convenient.}
 
@@ -337,7 +343,7 @@ Place related work here
 	\centering
 	\subfloat[][]{
 		\label{fig:gvd1}
-		\includegraphics[width=0.5\columnwidth]{gvd_1.png} }
+		\includegraphics[width=1\columnwidth]{gvd_1.png} }
 	\caption{Generalized Sites
 		\protect\subref{fig:gvd1} The exact Generalized Voronoi Diagram(GVD) is produced as sweep-line processes generalized sites. The algorithm supports any number of simple polygons as long as they are not overlapping. Each polygon is made up of a number of connected points. The GVD algorithm computes the appropriate bisector between sites. The bisector represents the continuous parabola or line that separates sites. If a point lies at the end of a segment the bisector is a line perpendicular to the segment intersecting that point; otherwise, the bisector between a point site and a segment site is a parabola representing the bisector of the two sites. With a pair of segments their bisector can include up to 2 lines if the intersection of the two segments lies between the endpoints of one segment. In all other cases the bisector of two segments can be represented with a single line.
 	}
@@ -349,7 +355,7 @@ Place related work here
 	\centering
 	\subfloat[][]{
 		\label{fig:gvd2}
-		\includegraphics[width=0.5\columnwidth]{gvd_2.png} }
+		\includegraphics[width=1\columnwidth]{gvd_2.png} }
 	\caption{Special Cases
 		\protect\subref{fig:gvd2} Special cases such as parallel sites are handled as the algorithm computes the correct bisector between each site. Between a pair of segments we use their intersection to find the bisector, however, when the segments are parallel there is no intersection and we use the average of the segments to determine the bisector. Finding the correct bisector enables the algorithm to determine future close events. 
 	}
@@ -375,9 +381,10 @@ Place related work here
 % Bibliography
 %-------------------------------------------------------------------------
 
-%\bibliographystyle{eg-alpha}
+
 %\bibliographystyle{eg-alpha-doi}
 %\balance
+%\bibliographystyle{eg-alpha}
 %\bibliography{paper}
 
 \end{document}
